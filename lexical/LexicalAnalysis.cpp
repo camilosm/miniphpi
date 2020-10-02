@@ -83,18 +83,64 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     lex.type = TKN_INVALID_TOKEN;
                     state = 16;
                 }
+                break;
 
-                break;
             case 2:
+				if(c == '*')
+					state = 3;
+				else if (c == -1) {
+					lex.type = TKN_UNEXPECTED_EOF;
+					state = 16;
+				}
+				else{
+					lex.token += '/';
+					ungetc(c, m_file);
+					state = 15;
+				}
                 break;
+
             case 3:
+				if(c == '*')
+					state = 4;
+				else if(c == -1){
+					lex.type = TKN_UNEXPECTED_EOF;
+					state = 16;
+				}
+				else
+					state = 3;
                 break;
+
             case 4:
+				if(c == '*')
+					state = 4;
+				else if(c == '/')
+					state = 1;
+				else if(c == -1){
+					lex.type = TKN_UNEXPECTED_EOF;
+					state = 16;
+				}
+				else
+					state = 3;
                 break;
+
             case 5:
+				if(c == '+' || c == '='){
+					lex.token += (char) c;
+					state = 15;
+				}
+				else if(c == -1){
+					lex.type = TKN_UNEXPECTED_EOF;
+					state = 16;
+				}
+				else{
+					ungetc(c, m_file);
+					state = 15;
+				}
                 break;
+
             case 6:
                 break;
+
             case 7:
                 if (c == '=') {
                     lex.token += (char) c;
@@ -106,8 +152,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
 
                     state = 15;
                 }
-
                 break;
+
             case 8:
                 if (c == '>' ||
                     c == '=') {
@@ -120,8 +166,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
 
                     state = 15;
                 }
-
                 break;
+
             case 9:
                 if (isalpha(c)) {
                     lex.token += (char) c;
@@ -133,8 +179,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
 
                     state = 15;
                 }
-
                 break;
+
             case 10:
                 if (c == '_' ||
                     isalpha(c)) {
@@ -147,8 +193,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
 
                     state = 15;
                 }
-
                 break;
+
             case 11:
                 if (c == '_' ||
                     isalpha(c) ||
@@ -163,10 +209,11 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     lex.type = TKN_VAR;
                     state = 16;
                 }
-
                 break;
+
             case 12:
                 break;
+
             case 13:
                 if (c == '\\') {
                     state = 14;
@@ -182,8 +229,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
                         state = 13;
                     }
                 }
-
                 break;
+
             case 14:
                 if (c == 'b') {
                     lex.token += '\b';
@@ -217,8 +264,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
 
                     state = 16;
                 }
-
                 break;
+
             default:
                 assert(false);
         }
