@@ -3,27 +3,22 @@
 
 #include <cstdio>
 #include <string>
-#include "TokenType.h"
+#include "Lexeme.h"
 #include "SymbolTable.h"
 
-struct Lexeme {
-   std::string token;
-   enum TokenType type;
-};
-
 class LexicalAnalysis {
-public:
-    LexicalAnalysis(const char* filename);
-    virtual ~LexicalAnalysis();
+	public:
+		LexicalAnalysis(const char* filename);
+		virtual ~LexicalAnalysis();
 
-    int line() const;
+		int line() const;
 
-    struct Lexeme nextToken();
+		struct Lexeme nextToken();
 
-private:
-    int m_line;
-    FILE* m_file;
-    SymbolTable m_st;
+	private:
+		int m_line;
+		FILE* m_file;
+		SymbolTable m_st;
 
 };
 

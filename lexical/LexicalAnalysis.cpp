@@ -11,7 +11,8 @@ LexicalAnalysis::LexicalAnalysis(const char* filename) : m_line(1) {
 }
 
 LexicalAnalysis::~LexicalAnalysis() {
-    fclose(m_file);
+    if (m_file != nullptr)
+		fclose(m_file);
 }
 
 int LexicalAnalysis::line() const {
@@ -19,12 +20,12 @@ int LexicalAnalysis::line() const {
 }
 
 struct Lexeme LexicalAnalysis::nextToken() {
-    struct Lexeme lex = { "", TKN_END_OF_FILE };
+    struct Lexeme lex;
 
     int state = 1;
     while (state != 15 && state != 16) {
         int c = getc(m_file);
-        
+
         switch (state) {
             case 1:
                 if (c == ' ' ||
@@ -102,7 +103,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     // ungetc
                     if (c != -1)
                         ungetc(c, m_file);
-                    
+
                     state = 15;
                 }
 
@@ -116,7 +117,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     // ungetc
                     if (c != -1)
                         ungetc(c, m_file);
-                    
+
                     state = 15;
                 }
 
@@ -129,7 +130,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     // ungetc
                     if (c != -1)
                         ungetc(c, m_file);
-                    
+
                     state = 15;
                 }
 
@@ -143,7 +144,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     // ungetc
                     if (c != -1)
                         ungetc(c, m_file);
-                    
+
                     state = 15;
                 }
 
@@ -158,7 +159,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     // ungetc
                     if (c != -1)
                         ungetc(c, m_file);
-                    
+
                     lex.type = TKN_VAR;
                     state = 16;
                 }
@@ -181,7 +182,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
                         state = 13;
                     }
                 }
-            
+
                 break;
             case 14:
                 if (c == 'b') {

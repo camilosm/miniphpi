@@ -12,6 +12,7 @@ int main(int argc, char* argv[]) {
 
     try {
         LexicalAnalysis l(argv[1]);
+		std::cout << l.nextToken().str() << std::endl;
 
 /*
         // O código a seguir é dado para testar o interpretador.
@@ -24,22 +25,22 @@ int main(int argc, char* argv[]) {
 
         // O código a seguir é usado apenas para testar o analisador léxico.
         // TODO: depois de pronto, comentar o código abaixo.
-        struct Lexeme lex;
-        while ((lex = l.nextToken()).type > 0) {
-            printf("(\"%s\", %d)\n", lex.token.c_str(), lex.type);
-        }
+        // struct Lexeme lex;
+        // while ((lex = l.nextToken()).type > 0) {
+        //     printf("(\"%s\", %d)\n", lex.token.c_str(), lex.type);
+        // }
 
-        switch (lex.type) {
-            case TKN_INVALID_TOKEN:
-                printf("%02d: Lexema inválido [%s]\n", l.line(), lex.token.c_str());
-                break;
-            case TKN_UNEXPECTED_EOF:
-                printf("%02d: Fim de arquivo inesperado\n", l.line());
-                break;
-            default:
-                printf("(\"%s\", %d)\n", lex.token.c_str(), lex.type);
-                break;
-        }
+        // switch (lex.type) {
+        //     case TKN_INVALID_TOKEN:
+        //         printf("%02d: Lexema inválido [%s]\n", l.line(), lex.token.c_str());
+        //         break;
+        //     case TKN_UNEXPECTED_EOF:
+        //         printf("%02d: Fim de arquivo inesperado\n", l.line());
+        //         break;
+        //     default:
+        //         printf("(\"%s\", %d)\n", lex.token.c_str(), lex.type);
+        //         break;
+        // }
     } catch (std::string msg) {
         fprintf(stderr, "Internal error: %s\n", msg.c_str());
         return 2;
