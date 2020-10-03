@@ -88,10 +88,6 @@ struct Lexeme LexicalAnalysis::nextToken() {
             case 2:
 				if(c == '*')
 					state = 3;
-				else if (c == -1) {
-					lex.type = TKN_UNEXPECTED_EOF;
-					state = 16;
-				}
 				else{
 					lex.token += '/';
 					ungetc(c, m_file);
@@ -103,7 +99,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
 				if(c == '*')
 					state = 4;
 				else if(c == -1){
-					lex.type = TKN_UNEXPECTED_EOF;
+					lex.type = TKN_END_OF_FILE;
 					state = 16;
 				}
 				else
@@ -116,7 +112,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
 				else if(c == '/')
 					state = 1;
 				else if(c == -1){
-					lex.type = TKN_UNEXPECTED_EOF;
+					lex.type = TKN_END_OF_FILE;
 					state = 16;
 				}
 				else
@@ -128,17 +124,23 @@ struct Lexeme LexicalAnalysis::nextToken() {
 					lex.token += (char) c;
 					state = 15;
 				}
-				else if(c == -1){
-					lex.type = TKN_UNEXPECTED_EOF;
-					state = 16;
-				}
 				else{
-					ungetc(c, m_file);
+					if(c != -1)
+						ungetc(c, m_file);
 					state = 15;
 				}
                 break;
 
             case 6:
+                if(c == '-' || c == '='){
+					lex.token += (char) c;
+					state = 15;
+				}
+				else{
+					if(c != -1)
+						ungetc(c, m_file);
+					state = 15;
+				}
                 break;
 
             case 7:
@@ -212,6 +214,16 @@ struct Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 12:
+				if(isdigit(c)){
+					lex.token+= (char) c;
+					state = 12;
+				}
+				else{
+					if(c != -1)
+						ungetc(c, m_file);
+					lex.type = TKN_NUMBER;
+					state = 16;
+				}
                 break;
 
             case 13:
