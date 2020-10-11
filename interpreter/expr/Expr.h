@@ -6,7 +6,7 @@
 class Expr{
 	public:
 		virtual ~Expr(){}
-		int line() const{
+		int getLine() const{
 			return m_line;
 		}
 		virtual Type* expr() = 0;

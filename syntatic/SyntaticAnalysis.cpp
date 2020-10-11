@@ -18,7 +18,7 @@ Command* SyntaticAnalysis::start() {
 }
 
 void SyntaticAnalysis::matchToken(enum TokenType type) {
-    // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
+    printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
         m_current = m_lex.nextToken();
     } else {

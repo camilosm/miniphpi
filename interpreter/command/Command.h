@@ -5,7 +5,7 @@ class Command {
 	public:
 		virtual ~Command() {}
 
-		int line() const { return m_line; }
+		int getLine() const { return m_line; }
 		virtual void execute() = 0;
 
 	protected:
