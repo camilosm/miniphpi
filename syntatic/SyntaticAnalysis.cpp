@@ -214,6 +214,7 @@ void SyntaticAnalysis::procCmpExpr() {
 Expr* SyntaticAnalysis::procExpr() {
 	Expr* expr;
 	expr = procTerm();
+	// falta completar
 	// while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT){
 	// 	m_current = m_lex.nextToken();
 	// 	procTerm();
@@ -224,6 +225,7 @@ Expr* SyntaticAnalysis::procExpr() {
 // <term> ::= <factor> { ('*' | '/' | '%') <factor> }
 Expr* SyntaticAnalysis::procTerm() {
 	return procFactor();
+	// falta completar
 	while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
 		m_current = m_lex.nextToken();
 		procFactor();
@@ -241,10 +243,10 @@ Expr* SyntaticAnalysis::procFactor() {
 			expr = procString();
 			break;
 		case TKN_ARRAY:
-			procArray();
+			//expr = procArray();
 			break;
 		case TKN_READ:
-			procRead();
+			expr = procRead();
 			break;
 		case TKN_INC:
 		case TKN_DEC:
@@ -279,10 +281,13 @@ void SyntaticAnalysis::procArray() {
 	matchToken(TKN_CLOSE_PAR);
 }
 
-// <read> ::= read <string>
-void SyntaticAnalysis::procRead() {
+// <read> ::= read <expr>
+Expr* SyntaticAnalysis::procRead() {
 	matchToken(TKN_READ);
-	procString();
+	int line = m_lex.line();
+	Expr* msg = procExpr();
+	Expr* expr = new ReadExpr(line, msg);
+	return expr;
 }
 
 // <value> ::= [ ('++' | '--') ] <access> | <access> [ ('++' | '--') ]

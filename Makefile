@@ -10,8 +10,10 @@ OBJS=mphpi.o \
 	interpreter/value/IntegerValue.o \
 	interpreter/value/StringValue.o \
 	interpreter/expr/ConstExpr.o \
+	interpreter/expr/ReadExpr.o \
 	interpreter/command/EchoCommand.o \
 	interpreter/command/BlocksCommand.o
+
 
 all: $(TARGET)
 
@@ -33,6 +35,8 @@ interpreter/value/IntegerValue.o: interpreter/value/Value.h
 interpreter/value/StringValue.o: interpreter/value/Value.h
 
 interpreter/expr/ConstExpr.o: interpreter/expr/Expr.h
+
+interpreter/expr/ReadExpr.o: interpreter/expr/Expr.h interpreter/command/EchoCommand.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h
 
 interpreter/command/EchoCommand.o: interpreter/command/Command.h interpreter/expr/Expr.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h interpreter/value/ArrayValue.h
 

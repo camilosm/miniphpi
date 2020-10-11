@@ -5,8 +5,9 @@
 
 #include "../lexical/LexicalAnalysis.h"
 #include "../interpreter/expr/ConstExpr.h"
-#include "../interpreter/expr/ConstExpr.h"
+#include "../interpreter/expr/ReadExpr.h"
 #include "../interpreter/value/IntegerValue.h"
+#include "../interpreter/value/StringValue.h"
 #include "../interpreter/command/Command.h"
 #include "../interpreter/command/EchoCommand.h"
 #include "../interpreter/command/BlocksCommand.h"
@@ -41,7 +42,7 @@ private:
     Expr* procTerm();
     Expr* procFactor();
     void procArray();
-    void procRead();
+    Expr* procRead();
     void procValue();
     void procAccess();
     void procVarVar();

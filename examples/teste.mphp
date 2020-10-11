@@ -1,2 +1,3 @@
 /* echo 5 + 5; */
 echo "teste";
+echo read "escreva na tela";
