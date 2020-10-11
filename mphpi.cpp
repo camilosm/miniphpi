@@ -17,8 +17,8 @@ int main(int argc, char* argv[]) {
         // TODO: descomentar depois que o analisador léxico estiver OK.
         SyntaticAnalysis s(l);
         Command* c = s.start();
-        // c->execute();
-        // delete c;
+        c->execute();
+        delete c;
 
         // O código a seguir é usado apenas para testar o analisador léxico.
         // TODO: depois de pronto, comentar o código abaixo.

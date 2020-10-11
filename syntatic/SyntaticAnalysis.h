@@ -1,8 +1,16 @@
 #ifndef SYNTATIC_ANALYSIS_H
 #define SYNTATIC_ANALYSIS_H
 
-#include "../lexical/LexicalAnalysis.h"
 #include <map>
+
+#include "../lexical/LexicalAnalysis.h"
+#include "../interpreter/expr/ConstExpr.h"
+#include "../interpreter/expr/ConstExpr.h"
+#include "../interpreter/value/IntegerValue.h"
+#include "../interpreter/command/Command.h"
+#include "../interpreter/command/EchoCommand.h"
+#include "../interpreter/command/BlocksCommand.h"
+
 
 class Command;
 
@@ -20,25 +28,25 @@ private:
     void matchToken(enum TokenType type);
     void showError();
 
-    void procCode();
-    void procStatement();
+    BlocksCommand* procCode();
+    Command* procStatement();
     void procIf();
     void procWhile();
     void procForeach();
-    void procEcho();
+    EchoCommand* procEcho();
     void procAssign();
     void procBoolExpr();
     void procCmpExpr();
-    void procExpr();
-    void procTerm();
-    void procFactor();
+    Expr* procExpr();
+    Expr* procTerm();
+    Expr* procFactor();
     void procArray();
     void procRead();
     void procValue();
     void procAccess();
     void procVarVar();
-    void procNumber();
-    void procString();
+    ConstExpr* procNumber();
+    ConstExpr* procString();
     void procVar();
 
 };

@@ -1,7 +1,8 @@
 #include <cstdlib>
-#include "SyntaticAnalysis.h"
+#include <cstdio>
 
-#include "../interpreter/command/Command.h"
+
+#include "SyntaticAnalysis.h"
 
 SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex) :
     m_lex(lex), m_current(m_lex.nextToken()) {
@@ -11,14 +12,13 @@ SyntaticAnalysis::~SyntaticAnalysis() {
 }
 
 Command* SyntaticAnalysis::start() {
-    procCode();
-	// conferir se é aqui que recolhe o token de eof
+    Command *cmd = procCode();
 	matchToken(TKN_END_OF_FILE);
-	return 0;
+	return cmd;
 }
 
 void SyntaticAnalysis::matchToken(enum TokenType type) {
-    printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
+    // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
         m_current = m_lex.nextToken();
     } else {
@@ -46,13 +46,22 @@ void SyntaticAnalysis::showError() {
 }
 
 // <code> ::= { <statement> }
-void SyntaticAnalysis::procCode() {
-	while(m_current.type == TKN_IF || m_current.type == TKN_WHILE || m_current.type == TKN_FOREACH || m_current.type == TKN_ECHO || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR)
-		procStatement();
+BlocksCommand* SyntaticAnalysis::procCode() {
+	int line = m_lex.line();
+
+	BlocksCommand* cmds = new BlocksCommand(line);
+	Command *cmd;
+	while(m_current.type == TKN_IF || m_current.type == TKN_WHILE || m_current.type == TKN_FOREACH || m_current.type == TKN_ECHO || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+		cmd = procStatement();
+		cmds->addCommand(cmd);
+	}
+
+	return cmds;
 }
 
 // <statement> ::= <if> | <while> | <foreach> | <echo> | <assign>
-void SyntaticAnalysis::procStatement() {
+Command* SyntaticAnalysis::procStatement() {
+	Command* cmd = 0;
 	switch(m_current.type){
 		case TKN_IF:
 			procIf();
@@ -64,7 +73,7 @@ void SyntaticAnalysis::procStatement() {
 			procForeach();
 			break;
 		case TKN_ECHO:
-			procEcho();
+			cmd = procEcho();
 			break;
 		case TKN_INC:
 		case TKN_DEC:
@@ -77,6 +86,8 @@ void SyntaticAnalysis::procStatement() {
 			showError();
 			break;
 	}
+
+	return cmd;
 }
 
 // <if> ::= if '(' <boolexpr> ')' '{' <code> '}'
@@ -136,10 +147,13 @@ void SyntaticAnalysis::procForeach() {
 }
 
 // <echo> ::= echo <expr> ';'
-void SyntaticAnalysis::procEcho() {
+EchoCommand* SyntaticAnalysis::procEcho() {
 	matchToken(TKN_ECHO);
-	procExpr();
+	int line = m_lex.line();
+	Expr* expr = procExpr();
+	EchoCommand* echo = new EchoCommand(line, expr);
 	matchToken(TKN_SEMICOLON);
+	return echo;
 }
 
 // <assign> ::= <value> [ ('=' | '+=' | '-=' | '.=' | '*=' | '/=' | '%=') <expr> ] ';'
@@ -197,17 +211,19 @@ void SyntaticAnalysis::procCmpExpr() {
 }
 
 // <expr> ::= <term> { ('+' | '-' | '.') <term> }
-void SyntaticAnalysis::procExpr() {
-	procTerm();
-	while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT){
-		m_current = m_lex.nextToken();
-		procTerm();
-	}
+Expr* SyntaticAnalysis::procExpr() {
+	Expr* expr;
+	expr = procTerm();
+	// while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT){
+	// 	m_current = m_lex.nextToken();
+	// 	procTerm();
+	// }
+	return expr;
 }
 
 // <term> ::= <factor> { ('*' | '/' | '%') <factor> }
-void SyntaticAnalysis::procTerm() {
-	procFactor();
+Expr* SyntaticAnalysis::procTerm() {
+	return procFactor();
 	while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
 		m_current = m_lex.nextToken();
 		procFactor();
@@ -215,13 +231,14 @@ void SyntaticAnalysis::procTerm() {
 }
 
 // <factor> ::= <number> | <string> | <array> | <read> | <value>
-void SyntaticAnalysis::procFactor() {
+Expr* SyntaticAnalysis::procFactor() {
+	Expr* expr;
 	switch(m_current.type){
 		case TKN_NUMBER:
-			procNumber();
+			expr = procNumber();
 			break;
 		case TKN_STRING:
-			procString();
+			expr = procString();
 			break;
 		case TKN_ARRAY:
 			procArray();
@@ -240,6 +257,8 @@ void SyntaticAnalysis::procFactor() {
 			showError();
 			break;
 	}
+
+	return expr;
 }
 
 // <array> ::= array '(' [ <expr> '=>' <expr> { ',' <expr> '=>' <expr> } ] ')'
@@ -310,12 +329,23 @@ void SyntaticAnalysis::procVarVar() {
 		procVar();
 }
 
-void SyntaticAnalysis::procNumber() {
+ConstExpr* SyntaticAnalysis::procNumber() {
+	std::string n_str = m_current.token;
 	matchToken(TKN_NUMBER);
+	int line = m_lex.line();
+	int n = atoi(n_str.c_str());
+	IntegerValue* integer = new IntegerValue(n);
+	ConstExpr* ce = new ConstExpr(line, integer);
+	return ce;
 }
 
-void SyntaticAnalysis::procString() {
+ConstExpr* SyntaticAnalysis::procString() {
+	std::string str = m_current.token;
 	matchToken(TKN_STRING);
+	int line = m_lex.line();
+	StringValue* string = new StringValue(str);
+	ConstExpr* ce = new ConstExpr(line, string);
+	return ce;
 }
 
 void SyntaticAnalysis::procVar() {
