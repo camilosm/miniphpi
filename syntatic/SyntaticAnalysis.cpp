@@ -17,6 +17,11 @@ Command* SyntaticAnalysis::start() {
 	return cmd;
 }
 
+void SyntaticAnalysis::semanticalError(int line){
+	printf("02%d: Operação inválida", line);
+	exit(1);
+}
+
 void SyntaticAnalysis::matchToken(enum TokenType type) {
     // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
@@ -199,7 +204,6 @@ AssignCommand* SyntaticAnalysis::procAssign() {
 	else
 		assign = new AssignCommand(line, left, op);
 	matchToken(TKN_SEMICOLON);
-	printf("teset");
 	return assign;
 }
 
@@ -292,26 +296,29 @@ Expr* SyntaticAnalysis::procArray() {
 	matchToken(TKN_OPEN_PAR);
 	int line = m_lex.line();
 	ArrayExpr* array = new ArrayExpr(line);
-	// if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
-	// 	Expr* key;
-	// 	Expr* value;
-	// 	key = procExpr();
-	// 	matchToken(TKN_ARROW);
-	// 	value = procExpr();
-	// 	array->insert(key, value);
-	// 	while(m_current.type == TKN_COMMA){
-	// 		m_current = m_lex.nextToken();
-	// 		key = procExpr();
-	// 		matchToken(TKN_ARROW);
-	// 		printf("teset");
-	// 		value = procExpr();
-	// 		array->insert(key, value);
-	// 	}
-	// }
+	if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+		Expr* key;
+		Expr* value;
+		key = procExpr();
+		matchToken(TKN_ARROW);
+		value = procExpr();
+		array->insert(key, value);
+		while(m_current.type == TKN_COMMA){
+			m_current = m_lex.nextToken();
+			key = procExpr();
+			matchToken(TKN_ARROW);
+			printf("teset");
+			value = procExpr();
+			array->insert(key, value);
+		}
+	}
 
 	matchToken(TKN_CLOSE_PAR);
-	// return (Expr*) array->expr();
-	return nullptr;
+	Expr* expr = (Expr*)array->expr();
+	if(expr)
+		return expr;
+	else
+		semanticalError(m_lex.line());
 }
 
 // <read> ::= read <expr>

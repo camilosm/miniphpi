@@ -29,6 +29,7 @@ private:
     LexicalAnalysis& m_lex;
     Lexeme m_current;
 
+	void semanticalError(int line);
     void matchToken(enum TokenType type);
     void showError();
 
