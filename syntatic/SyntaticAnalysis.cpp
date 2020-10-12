@@ -12,13 +12,13 @@ SyntaticAnalysis::~SyntaticAnalysis() {
 }
 
 Command* SyntaticAnalysis::start() {
-    Command *cmd = procCode();
+    Command* cmd = procCode();
 	matchToken(TKN_END_OF_FILE);
 	return cmd;
 }
 
 void SyntaticAnalysis::semanticalError(int line){
-	printf("02%d: Operação inválida", line);
+	printf("%02d: Operação inválida", line);
 	exit(1);
 }
 
@@ -66,15 +66,18 @@ BlocksCommand* SyntaticAnalysis::procCode() {
 
 // <statement> ::= <if> | <while> | <foreach> | <echo> | <assign>
 Command* SyntaticAnalysis::procStatement() {
-	Command* cmd = 0;
+	Command* cmd;
 	switch(m_current.type){
 		case TKN_IF:
+			printf("\n\nIF\n\n");
 			procIf();
 			break;
 		case TKN_WHILE:
+			printf("\n\nWHILE\n\n");
 			procWhile();
 			break;
 		case TKN_FOREACH:
+			printf("\n\nFOREACH\n\n");
 			procForeach();
 			break;
 		case TKN_ECHO:
@@ -251,12 +254,14 @@ Expr* SyntaticAnalysis::procExpr() {
 
 // <term> ::= <factor> { ('*' | '/' | '%') <factor> }
 Expr* SyntaticAnalysis::procTerm() {
-	return procFactor();
+	Expr* expr;
+	expr = procFactor();
 	// falta completar
-	while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
-		m_current = m_lex.nextToken();
-		procFactor();
-	}
+	// while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
+	// 	m_current = m_lex.nextToken();
+	// 	procFactor();
+	// }
+	return expr;
 }
 
 // <factor> ::= <number> | <string> | <array> | <read> | <value>
@@ -307,7 +312,6 @@ Expr* SyntaticAnalysis::procArray() {
 			m_current = m_lex.nextToken();
 			key = procExpr();
 			matchToken(TKN_ARROW);
-			printf("teset");
 			value = procExpr();
 			array->insert(key, value);
 		}
@@ -348,6 +352,8 @@ Expr* SyntaticAnalysis::procValue() {
 
 // <access> ::= ( <varvar> | '(' <expr> ')' ) [ '[' <expr> ']' ]
 Expr* SyntaticAnalysis::procAccess() {
+	return procVarVar();
+
 	Expr* expr;
 	if(m_current.type == TKN_DOLAR || m_current.type == TKN_VAR)
 		expr = procVarVar();
@@ -368,6 +374,7 @@ Expr* SyntaticAnalysis::procAccess() {
 
 // <varvar> ::= '$' <varvar> | <var>
 Variable* SyntaticAnalysis::procVarVar() {
+	return procVar();
 	if(m_current.type == TKN_DOLAR){
 		m_current = m_lex.nextToken();
 		return procVarVar();

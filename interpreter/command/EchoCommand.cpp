@@ -1,6 +1,3 @@
-#include <iostream>
-#include <cstdio>
-
 #include "EchoCommand.h"
 
 EchoCommand::EchoCommand(int line, Expr* expr):
@@ -28,8 +25,7 @@ void EchoCommand::execute(){
 		}
 
 		case Type::ArrayType: {
-			// TODO: converter
-			std::cout << "ArrayType" << std::endl;
+			std::cout << "array" << std::endl;
 			break;
 		}
 

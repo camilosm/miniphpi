@@ -6,7 +6,10 @@ AssignCommand::~AssignCommand(){
 }
 
 void AssignCommand::execute(){
+	// std::cout << "executando assign" << std::endl;
+
 	Variable* lhs = (Variable*) m_left;
+	lhs->setExpr((Type*)m_right->expr());
 	// NoAssignOp = 1,
 	// StdAssignOp = 2,
 	// AddAssignOp = 3,
@@ -23,5 +26,20 @@ void AssignCommand::execute(){
 	// 	default:
 	// 		break;
 	// }
-	((Variable*) m_left)->setExpr(m_right->expr());
+
+	// tratamento pra array NAO FUNCIONA
+	// ArrayValue* array = (ArrayValue*) m_right;
+
+	// std::map<std::string,Type*> arrayvalue = array->value();
+	// std::map<std::string,Type*>::iterator it = arrayvalue.begin();
+	// std::string key;
+	// Type* value;
+	// Variable* dest;
+	// while(it!=arrayvalue.end()){
+	// 	key = it->first;
+	// 	value = it->second;
+	// 	dest = lhs->instance(key);
+	// 	dest->setExpr(value);
+	// }
+
 }

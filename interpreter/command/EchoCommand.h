@@ -1,6 +1,10 @@
 #ifndef ECHO_COMMAND_H
 #define ECHO_COMMAND_H
 
+#include <iostream>
+#include <map>
+#include <iterator>
+
 #include "Command.h"
 #include "../expr/Expr.h"
 #include "../value/IntegerValue.h"

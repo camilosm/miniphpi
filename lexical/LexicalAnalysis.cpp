@@ -25,6 +25,8 @@ struct Lexeme LexicalAnalysis::nextToken() {
     int state = 1;
     while (state != 15 && state != 16) {
         int c = getc(m_file);
+		if (c=='\n')
+			m_line++;
 
         switch (state) {
             case 1:
@@ -33,7 +35,6 @@ struct Lexeme LexicalAnalysis::nextToken() {
                     c == '\t') {
                     state = 1;
                 } else if (c == '\n') {
-                    m_line++;
                     state = 1;
                 } else if (c == '/') {
                     state = 2;

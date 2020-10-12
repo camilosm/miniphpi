@@ -4,6 +4,7 @@
 #include "Command.h"
 #include "../expr/Expr.h"
 #include "../expr/Variable.h"
+#include "../value/ArrayValue.h"
 
 class AssignCommand: public Command{
 	public:
