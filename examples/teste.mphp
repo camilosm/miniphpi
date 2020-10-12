@@ -1,3 +1,10 @@
-/* echo 5 + 5; */
+/* echo 5 + 5;
 echo "teste";
-echo read "escreva na tela";
+echo read "escreva na tela"; */
+
+$x = array();
+
+echo $x;
+
+/* echo $$a; */
+/* echo $temp; */

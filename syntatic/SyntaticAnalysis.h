@@ -4,10 +4,13 @@
 #include <map>
 
 #include "../lexical/LexicalAnalysis.h"
+#include "../interpreter/expr/ArrayExpr.h"
 #include "../interpreter/expr/ConstExpr.h"
 #include "../interpreter/expr/ReadExpr.h"
+#include "../interpreter/expr/Variable.h"
 #include "../interpreter/value/IntegerValue.h"
 #include "../interpreter/value/StringValue.h"
+#include "../interpreter/command/AssignCommand.h"
 #include "../interpreter/command/Command.h"
 #include "../interpreter/command/EchoCommand.h"
 #include "../interpreter/command/BlocksCommand.h"
@@ -35,20 +38,20 @@ private:
     void procWhile();
     void procForeach();
     EchoCommand* procEcho();
-    void procAssign();
+    AssignCommand* procAssign();
     void procBoolExpr();
     void procCmpExpr();
     Expr* procExpr();
     Expr* procTerm();
     Expr* procFactor();
-    void procArray();
+    Expr* procArray();
     Expr* procRead();
-    void procValue();
-    void procAccess();
-    void procVarVar();
+    Expr* procValue();
+    Expr* procAccess();
+    Variable* procVarVar();
     ConstExpr* procNumber();
     ConstExpr* procString();
-    void procVar();
+    Variable* procVar();
 
 };
 

@@ -18,7 +18,7 @@ Command* SyntaticAnalysis::start() {
 }
 
 void SyntaticAnalysis::matchToken(enum TokenType type) {
-    printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
+    // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
         m_current = m_lex.nextToken();
     } else {
@@ -80,7 +80,7 @@ Command* SyntaticAnalysis::procStatement() {
 		case TKN_DOLAR:
 		case TKN_VAR:
 		case TKN_OPEN_PAR:
-			procAssign();
+			cmd = procAssign();
 			break;
 		default:
 			showError();
@@ -157,27 +157,50 @@ EchoCommand* SyntaticAnalysis::procEcho() {
 }
 
 // <assign> ::= <value> [ ('=' | '+=' | '-=' | '.=' | '*=' | '/=' | '%=') <expr> ] ';'
-void SyntaticAnalysis::procAssign() {
-	procValue();
+AssignCommand* SyntaticAnalysis::procAssign() {
+	int line = m_lex.line();
+	Expr* left = procValue();
+	enum AssignCommand::AssignOp op;
 	switch(m_current.type){
 		case TKN_ASSIGN:
+			op = AssignCommand::StdAssignOp;
+			break;
 		case TKN_ASSIGN_ADD:
+			op = AssignCommand::AddAssignOp;
+			break;
 		case TKN_ASSIGN_SUB:
+			op = AssignCommand::SubAssignOp;
+			break;
 		case TKN_ASSIGN_CONCAT:
+			op = AssignCommand::ConcatAssignOp;
+			break;
 		case TKN_ASSIGN_MUL:
+			op = AssignCommand::MulAssignOp;
+			break;
 		case TKN_ASSIGN_DIV:
+			op = AssignCommand::DivAssignOp;
+			break;
 		case TKN_ASSIGN_MOD:
-			m_current = m_lex.nextToken();
-			procExpr();
-			matchToken(TKN_SEMICOLON);
+			op = AssignCommand::ModAssignOp;
 			break;
 		case TKN_SEMICOLON:
-			m_current = m_lex.nextToken();
+			op = AssignCommand::NoAssignOp;
 			break;
 		default:
 			showError();
 			break;
 	}
+	m_current = m_lex.nextToken();
+	AssignCommand* assign;
+	if(op!=AssignCommand::NoAssignOp){
+		Expr* right = procExpr();
+		assign = new AssignCommand(line, left, op, right);
+	}
+	else
+		assign = new AssignCommand(line, left, op);
+	matchToken(TKN_SEMICOLON);
+	printf("teset");
+	return assign;
 }
 
 // <boolexpr> ::= [ '!' ] <cmpexpr> [ (and | or) <boolexpr> ]
@@ -243,7 +266,7 @@ Expr* SyntaticAnalysis::procFactor() {
 			expr = procString();
 			break;
 		case TKN_ARRAY:
-			//expr = procArray();
+			expr = procArray();
 			break;
 		case TKN_READ:
 			expr = procRead();
@@ -253,7 +276,7 @@ Expr* SyntaticAnalysis::procFactor() {
 		case TKN_DOLAR:
 		case TKN_VAR:
 		case TKN_OPEN_PAR:
-			procValue();
+			expr = procValue();
 			break;
 		default:
 			showError();
@@ -264,21 +287,31 @@ Expr* SyntaticAnalysis::procFactor() {
 }
 
 // <array> ::= array '(' [ <expr> '=>' <expr> { ',' <expr> '=>' <expr> } ] ')'
-void SyntaticAnalysis::procArray() {
+Expr* SyntaticAnalysis::procArray() {
 	matchToken(TKN_ARRAY);
 	matchToken(TKN_OPEN_PAR);
-	if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
-		procExpr();
-		matchToken(TKN_ARROW);
-		procExpr();
-		while(m_current.type == TKN_COMMA){
-			m_current = m_lex.nextToken();
-			procExpr();
-			matchToken(TKN_ARROW);
-			procExpr();
-		}
-	}
+	int line = m_lex.line();
+	ArrayExpr* array = new ArrayExpr(line);
+	// if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+	// 	Expr* key;
+	// 	Expr* value;
+	// 	key = procExpr();
+	// 	matchToken(TKN_ARROW);
+	// 	value = procExpr();
+	// 	array->insert(key, value);
+	// 	while(m_current.type == TKN_COMMA){
+	// 		m_current = m_lex.nextToken();
+	// 		key = procExpr();
+	// 		matchToken(TKN_ARROW);
+	// 		printf("teset");
+	// 		value = procExpr();
+	// 		array->insert(key, value);
+	// 	}
+	// }
+
 	matchToken(TKN_CLOSE_PAR);
+	// return (Expr*) array->expr();
+	return nullptr;
 }
 
 // <read> ::= read <expr>
@@ -291,25 +324,26 @@ Expr* SyntaticAnalysis::procRead() {
 }
 
 // <value> ::= [ ('++' | '--') ] <access> | <access> [ ('++' | '--') ]
-void SyntaticAnalysis::procValue() {
+Expr* SyntaticAnalysis::procValue() {
 	if(m_current.type != TKN_DOLAR && m_current.type != TKN_VAR && m_current.type != TKN_OPEN_PAR){
 		if(m_current.type == TKN_INC || m_current.type == TKN_DEC)
 			m_current = m_lex.nextToken();
 		else
 			showError();
-		procAccess();
+		return procAccess();
 	}
 	else{
-		procAccess();
+		return procAccess();
 		if(m_current.type == TKN_INC || m_current.type == TKN_DEC)
 			m_current = m_lex.nextToken();
 	}
 }
 
 // <access> ::= ( <varvar> | '(' <expr> ')' ) [ '[' <expr> ']' ]
-void SyntaticAnalysis::procAccess() {
+Expr* SyntaticAnalysis::procAccess() {
+	Expr* expr;
 	if(m_current.type == TKN_DOLAR || m_current.type == TKN_VAR)
-		procVarVar();
+		expr = procVarVar();
 	else if(m_current.type == TKN_OPEN_PAR){
 		m_current = m_lex.nextToken();
 		procExpr();
@@ -322,16 +356,20 @@ void SyntaticAnalysis::procAccess() {
 		procExpr();
 		matchToken(TKN_CLOSE_BRA);
 	}
+	return expr;
 }
 
 // <varvar> ::= '$' <varvar> | <var>
-void SyntaticAnalysis::procVarVar() {
+Variable* SyntaticAnalysis::procVarVar() {
 	if(m_current.type == TKN_DOLAR){
 		m_current = m_lex.nextToken();
-		procVarVar();
+		return procVarVar();
+		Variable* var = procVarVar();
+		StringValue* nome = (StringValue*) var->expr();
+		return Variable::instance(nome->value());
 	}
 	else
-		procVar();
+		return procVar();
 }
 
 ConstExpr* SyntaticAnalysis::procNumber() {
@@ -353,6 +391,9 @@ ConstExpr* SyntaticAnalysis::procString() {
 	return ce;
 }
 
-void SyntaticAnalysis::procVar() {
+Variable* SyntaticAnalysis::procVar() {
+	std::string nome = m_current.token;
 	matchToken(TKN_VAR);
+	Variable* var = Variable::instance(nome);
+	return var;
 }

@@ -7,8 +7,6 @@
 
 #include "Expr.h"
 #include "../command/EchoCommand.h"
-#include "../value/IntegerValue.h"
-#include "../value/StringValue.h"
 
 class ReadExpr: public Expr{
 	public:

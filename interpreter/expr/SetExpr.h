@@ -7,11 +7,10 @@ class SetExpr: public Expr{
 	public:
 		virtual ~SetExpr(){};
 
-		Type* expr();
-		void setExpr(Type* value);
+		virtual Type* expr() = 0;
+		virtual void setExpr(Type* value) = 0;
 	protected:
 		SetExpr(int line): Expr(line){};
-
 };
 
 #endif

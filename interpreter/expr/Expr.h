@@ -2,6 +2,8 @@
 #define EXPR_H
 
 #include "../value/Value.h"
+#include "../value/IntegerValue.h"
+#include "../value/StringValue.h"
 
 class Expr{
 	public:
