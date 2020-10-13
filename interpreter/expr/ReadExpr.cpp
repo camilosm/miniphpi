@@ -7,7 +7,7 @@ ReadExpr::~ReadExpr(){
 }
 
 Type* ReadExpr::expr(){
-	EchoCommand* echo = new EchoCommand(getLine(), m_msg);
+	EchoCommand* echo = new EchoCommand(line(), m_msg);
 	echo->execute();
 	std::string input;
 	std::cin >> input;
