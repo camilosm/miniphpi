@@ -4,23 +4,20 @@
 #include <string>
 #include <map>
 
+#include "../util/Memory.h"
 #include "SetExpr.h"
 
 class Variable: public SetExpr{
 	public:
+		Variable(int line, const std::string& name);
 		virtual ~Variable();
 
-		static Variable* instance(const std::string& name);
 		const std::string& getName() { return m_name; }
 		virtual Type* expr();
-		void setExpr(Type* value) {m_value = value;}
+		void setExpr(Type* value);
 
 	private:
-		Variable(const std::string& name);
-
-		static std::map<std::string, Variable*> m_variables;
 		const std::string m_name;
-		Type* m_value;
 };
 
 #endif

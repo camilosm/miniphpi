@@ -1,23 +1,17 @@
 #include "Variable.h"
 
-std::map<std::string, Variable*> Variable::m_variables;
-StringValue* value = new StringValue("");
-
-Variable::Variable(const std::string& name):SetExpr(-1), m_name(name), m_value((Type*) value){
+Variable::Variable(int line, const std::string& name)
+	:SetExpr(line), m_name(name){
 }
 
-Variable::~Variable(){}
-
-Variable* Variable::instance(const std::string& name){
-	Variable* v = m_variables[name];
-	if(!v){
-		v = new Variable(name);
-		m_variables[name] = v;
-	}
-
-	return v;
+Variable::~Variable(){
 }
+
+void Variable::setExpr(Type* value){
+	Memory::write(m_name, value);
+}
+
 
 Type* Variable::expr(){
-	return m_value;
+	return Memory::read(m_name);
 }
