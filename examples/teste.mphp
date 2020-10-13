@@ -2,10 +2,11 @@
 echo "teste";
 echo read "escreva na tela"; */
 
-$a = 5;
 $b = 3;
+$a = array();
 
 echo $a;
+echo $b;
 
 /* echo $$a; */
 /* echo $temp; */

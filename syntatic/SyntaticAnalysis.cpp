@@ -17,11 +17,6 @@ Command* SyntaticAnalysis::start() {
 	return cmd;
 }
 
-void SyntaticAnalysis::semanticalError(int line){
-	printf("%02d: Operação inválida", line);
-	exit(1);
-}
-
 void SyntaticAnalysis::matchToken(enum TokenType type) {
     // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
@@ -60,7 +55,6 @@ BlocksCommand* SyntaticAnalysis::procCode() {
 		cmd = procStatement();
 		cmds->addCommand(cmd);
 	}
-
 	return cmds;
 }
 
@@ -166,6 +160,7 @@ EchoCommand* SyntaticAnalysis::procEcho() {
 
 // <assign> ::= <value> [ ('=' | '+=' | '-=' | '.=' | '*=' | '/=' | '%=') <expr> ] ';'
 AssignCommand* SyntaticAnalysis::procAssign() {
+	// problema no array
 	int line = m_lex.line();
 	Expr* left = procValue();
 	enum AssignCommand::AssignOp op;
@@ -261,6 +256,7 @@ Expr* SyntaticAnalysis::procTerm() {
 	// 	m_current = m_lex.nextToken();
 	// 	procFactor();
 	// }
+
 	return expr;
 }
 
@@ -301,28 +297,24 @@ Expr* SyntaticAnalysis::procArray() {
 	matchToken(TKN_OPEN_PAR);
 	int line = m_lex.line();
 	ArrayExpr* array = new ArrayExpr(line);
-	if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
-		Expr* key;
-		Expr* value;
-		key = procExpr();
-		matchToken(TKN_ARROW);
-		value = procExpr();
-		array->insert(key, value);
-		while(m_current.type == TKN_COMMA){
-			m_current = m_lex.nextToken();
-			key = procExpr();
-			matchToken(TKN_ARROW);
-			value = procExpr();
-			array->insert(key, value);
-		}
-	}
-
+	// if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+	// 	Expr* key;
+	// 	Expr* value;
+	// 	key = procExpr();
+	// 	matchToken(TKN_ARROW);
+	// 	value = procExpr();
+	// 	array->insert(key, value);
+	// 	while(m_current.type == TKN_COMMA){
+	// 		m_current = m_lex.nextToken();
+	// 		key = procExpr();
+	// 		matchToken(TKN_ARROW);
+	// 		value = procExpr();
+	// 		array->insert(key, value);
+	// 	}
+	// }
 	matchToken(TKN_CLOSE_PAR);
 	Expr* expr = (Expr*)array->expr();
-	if(expr)
-		return expr;
-	else
-		semanticalError(m_lex.line());
+	return expr;
 }
 
 // <read> ::= read <expr>

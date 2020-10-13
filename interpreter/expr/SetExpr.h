@@ -9,6 +9,7 @@ class SetExpr: public Expr{
 
 		virtual Type* expr() = 0;
 		virtual void setExpr(Type* value) = 0;
+		virtual bool writable() { return true;}
 	protected:
 		SetExpr(int line): Expr(line){};
 };

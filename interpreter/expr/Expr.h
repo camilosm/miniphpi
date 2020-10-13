@@ -8,10 +8,11 @@
 class Expr{
 	public:
 		virtual ~Expr(){}
-		int getLine() const{
+		int line() const{
 			return m_line;
 		}
 		virtual Type* expr() = 0;
+		virtual bool writable() { return false;}
 	protected:
 		Expr(int line): m_line(line){}
 

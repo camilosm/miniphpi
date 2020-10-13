@@ -1,6 +1,7 @@
 #include "ArrayExpr.h"
 
-ArrayExpr::ArrayExpr(int line):Expr(line){
+ArrayExpr::ArrayExpr(int line)
+	:Expr(line){
 }
 
 ArrayExpr::~ArrayExpr(){
@@ -11,30 +12,29 @@ void ArrayExpr::insert(Expr* key, Expr* value){
 }
 
 Type* ArrayExpr::expr(){
-	std::map<std::string,Type*> arrayvalue;
+	std::map<std::string,Type*> map;
 	std::map<Expr*,Expr*>::iterator it = m_array.begin();
-	std::string key;
-	Type* keytype;
+	std::string strkey;
+	Type* key;
 	Type* value;
 
-
 	while(it != m_array.end()){
-		keytype = it->first->expr();
+		key = it->first->expr();
 
-		switch (keytype->type()) {
-            case Type::IntegerType: {
-                IntegerValue* iv = (IntegerValue*) keytype;
-				key = std::to_string(iv->value());
+		switch(key->type()){
+            case Type::IntegerType:{
+                IntegerValue* iv = (IntegerValue*) key;
+				strkey = std::to_string(iv->value());
                 break;
-            }
-            case Type::StringType: {
-                StringValue* sv = (StringValue*) keytype;
-                key = sv->value();
+			}
+            case Type::StringType:{
+                StringValue* sv = (StringValue*) key;
+                strkey = sv->value();
                 break;
-            }
+			}
             case Type::ArrayType: {
-                //erro semantico
-				return nullptr;
+				printf("%02d: Operação inválida", line());
+				exit(1);
                 break;
             }
             default:
@@ -42,10 +42,11 @@ Type* ArrayExpr::expr(){
                 break;
         }
 
-		arrayvalue.insert({key, value});
+		map.insert({strkey, value});
 		it++;
 	}
 
-	ArrayValue* array = new ArrayValue(arrayvalue);
+	ArrayValue* array = new ArrayValue(map);
 	return array;
+
 }

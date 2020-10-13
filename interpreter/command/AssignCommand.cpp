@@ -1,15 +1,27 @@
 #include "AssignCommand.h"
 
-AssignCommand::AssignCommand(int line, Expr* left, AssignOp op, Expr* right):Command(line), m_left(left), m_op(op), m_right(right){
+AssignCommand::AssignCommand(int line, Expr* left, AssignOp op, Expr* right)
+	:Command(line), m_left(left), m_op(op), m_right(right){
 }
+
 AssignCommand::~AssignCommand(){
+	delete m_left;
+	delete m_right;
 }
 
 void AssignCommand::execute(){
-	// std::cout << "executando assign" << std::endl;
+	if(m_left->writable()){
+		// problema aqui
+		SetExpr* lhs = (SetExpr*) m_left;
+		lhs->setExpr(m_right->expr());
+	}
+	else{
+		printf("%02d: Operação inválida", line());
+		exit(1);
+	}
 
-	Variable* lhs = (Variable*) m_left;
-	lhs->setExpr((Type*)m_right->expr());
+
+
 	// NoAssignOp = 1,
 	// StdAssignOp = 2,
 	// AddAssignOp = 3,
