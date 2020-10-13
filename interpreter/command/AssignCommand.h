@@ -1,6 +1,7 @@
 #ifndef ASSIGN_COMMAND_H
 #define ASSIGN_COMMAND_H
 
+#include "../expr/Variable.h"
 #include "Command.h"
 #include "../expr/Expr.h"
 #include "../expr/Variable.h"

@@ -3,10 +3,10 @@ echo "teste";
 echo read "escreva na tela"; */
 
 $b = 3;
-$a = array();
+$a = array("t" => "T");
 
-echo $a;
 echo $b;
+echo $a;
 
 /* echo $$a; */
 /* echo $temp; */

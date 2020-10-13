@@ -297,24 +297,23 @@ Expr* SyntaticAnalysis::procArray() {
 	matchToken(TKN_OPEN_PAR);
 	int line = m_lex.line();
 	ArrayExpr* array = new ArrayExpr(line);
-	// if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
-	// 	Expr* key;
-	// 	Expr* value;
-	// 	key = procExpr();
-	// 	matchToken(TKN_ARROW);
-	// 	value = procExpr();
-	// 	array->insert(key, value);
-	// 	while(m_current.type == TKN_COMMA){
-	// 		m_current = m_lex.nextToken();
-	// 		key = procExpr();
-	// 		matchToken(TKN_ARROW);
-	// 		value = procExpr();
-	// 		array->insert(key, value);
-	// 	}
-	// }
+	if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+		Expr* key;
+		Expr* value;
+		key = procExpr();
+		matchToken(TKN_ARROW);
+		value = procExpr();
+		array->insert(key, value);
+		while(m_current.type == TKN_COMMA){
+			m_current = m_lex.nextToken();
+			key = procExpr();
+			matchToken(TKN_ARROW);
+			value = procExpr();
+			array->insert(key, value);
+		}
+	}
 	matchToken(TKN_CLOSE_PAR);
-	Expr* expr = (Expr*)array->expr();
-	return expr;
+	return array;
 }
 
 // <read> ::= read <expr>

@@ -4,6 +4,7 @@
 #include <map>
 #include <iterator>
 
+#include "Variable.h" //?
 #include "Expr.h"
 #include "../value/IntegerValue.h"
 #include "../value/StringValue.h"
