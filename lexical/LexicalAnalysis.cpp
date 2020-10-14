@@ -89,6 +89,10 @@ struct Lexeme LexicalAnalysis::nextToken() {
             case 2:
 				if(c == '*')
 					state = 3;
+				else if(c == '='){
+					lex.token += "/=";
+					state = 15;
+				}
 				else{
 					lex.token += '/';
 					ungetc(c, m_file);
