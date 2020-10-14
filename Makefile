@@ -6,6 +6,7 @@ OBJS=mphpi.o \
 	lexical/SymbolTable.o \
 	lexical/LexicalAnalysis.o \
 	syntatic/SyntaticAnalysis.o \
+	interpreter/util/Interruption.o \
 	interpreter/util/Memory.o \
 	interpreter/value/ArrayValue.o \
 	interpreter/value/IntegerValue.o \
@@ -31,6 +32,8 @@ lexical/SymbolTable.o: lexical/TokenType.h
 lexical/LexicalAnalysis.o: lexical/Lexeme.h lexical/SymbolTable.h
 
 syntatic/SyntaticAnalysis.o: lexical/LexicalAnalysis.h
+
+interpreter/util/Interruption.o: interpreter/util/Interruption.h
 
 interpreter/util/Memory.o: interpreter/util/Memory.h interpreter/expr/SetExpr.h
 
