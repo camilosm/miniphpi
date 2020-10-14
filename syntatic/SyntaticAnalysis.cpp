@@ -160,7 +160,6 @@ EchoCommand* SyntaticAnalysis::procEcho() {
 
 // <assign> ::= <value> [ ('=' | '+=' | '-=' | '.=' | '*=' | '/=' | '%=') <expr> ] ';'
 AssignCommand* SyntaticAnalysis::procAssign() {
-	// problema no array
 	int line = m_lex.line();
 	Expr* left = procValue();
 	enum AssignCommand::AssignOp op;
@@ -193,9 +192,9 @@ AssignCommand* SyntaticAnalysis::procAssign() {
 			showError();
 			break;
 	}
-	m_current = m_lex.nextToken();
 	AssignCommand* assign;
 	if(op!=AssignCommand::NoAssignOp){
+		m_current = m_lex.nextToken();
 		Expr* right = procExpr();
 		assign = new AssignCommand(line, left, op, right);
 	}

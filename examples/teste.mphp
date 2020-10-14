@@ -2,11 +2,16 @@
 echo "teste";
 echo read "escreva na tela"; */
 
-$b = 3;
-$a = array("t" => "T");
-
+$b = 200;
+$b -= 4;
 echo $b;
-echo $a;
-
-/* echo $$a; */
-/* echo $temp; */
+$b += 4;
+echo $b;
+$b *= 4;
+echo $b;
+$b %= 4;
+echo $b;
+$b .= 4;
+echo $b;
+$b *= 4;
+echo $b;
