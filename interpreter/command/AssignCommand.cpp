@@ -15,9 +15,7 @@ void AssignCommand::execute(){
 		return;
 
 	if(!m_left->writable() || m_left->expr()->type() == Type::ArrayType){
-		//erro
-		printf("%02d: Operação inválida", line());
-		exit(1);
+		Interruption::semantical(line());
 	}
 
 	if(m_left->expr()->type() == Type::StringType)

@@ -6,6 +6,7 @@
 #include "../expr/Expr.h"
 #include "../expr/Variable.h"
 #include "../value/ArrayValue.h"
+#include "../util/Interruption.h"
 
 class AssignCommand: public Command{
 	public:
