@@ -5,6 +5,7 @@
 #include <string>
 
 #include "../value/Type.h"
+#include "../value/StringValue.h"
 
 class Memory {
 	public:
