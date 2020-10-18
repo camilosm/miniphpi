@@ -8,6 +8,7 @@
 #include "../interpreter/expr/ConstExpr.h"
 #include "../interpreter/expr/ReadExpr.h"
 #include "../interpreter/expr/Variable.h"
+#include "../interpreter/expr/VarVarExpr.h"
 #include "../interpreter/value/IntegerValue.h"
 #include "../interpreter/value/StringValue.h"
 #include "../interpreter/command/AssignCommand.h"
@@ -49,7 +50,7 @@ private:
     Expr* procRead();
     Expr* procValue();
     Expr* procAccess();
-    Variable* procVarVar();
+    Expr* procVarVar();
     ConstExpr* procNumber();
     ConstExpr* procString();
     Variable* procVar();

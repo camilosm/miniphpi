@@ -363,17 +363,23 @@ Expr* SyntaticAnalysis::procAccess() {
 };
 
 // <varvar> ::= '$' <varvar> | <var>
-Variable* SyntaticAnalysis::procVarVar() {
-	return procVar();
-	// if(m_current.type == TKN_DOLAR){
-	// 	m_current = m_lex.nextToken();
-	// 	//return procVarVar();
-	// 	Variable* var = procVarVar();
-	// 	StringValue* nome = (StringValue*) var->expr();
-	// 	return Variable::instance(nome->value());
-	// }
-	// else
-	// 	return procVar();
+Expr* SyntaticAnalysis::procVarVar() {
+	if(m_current.type == TKN_DOLAR){
+		std::string varvar;
+		while(m_current.type == TKN_DOLAR){
+			varvar += "$";
+			m_current = m_lex.nextToken();
+		}
+		varvar += m_current.token;
+		int line = m_lex.line();
+		matchToken(TKN_VAR);
+		StringValue* str = new StringValue(varvar);
+		Expr* expr = (Expr*) str;
+		Expr* varvarexpr = new VarVarExpr(line, expr);
+		return varvarexpr;
+	}
+	else
+		return procVar();
 }
 
 ConstExpr* SyntaticAnalysis::procNumber() {
