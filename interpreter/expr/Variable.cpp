@@ -13,11 +13,5 @@ void Variable::setExpr(Type* value){
 
 
 Type* Variable::expr(){
-	Type* value = Memory::read(m_name);
-	if(!value){
-		value = new StringValue("");
-		setExpr(value);
-	}
-	return value;
-
+	return Memory::read(m_name);
 }
