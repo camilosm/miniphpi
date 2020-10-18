@@ -1,5 +1,8 @@
 #include "ArrayExpr.h"
 
+#include <iostream>
+
+
 ArrayExpr::ArrayExpr(int line)
 	:Expr(line){
 }
@@ -42,6 +45,7 @@ Type* ArrayExpr::expr(){
                 break;
         }
 
+		value = it->second->expr();
 		map.insert({strkey, value});
 		it++;
 	}
