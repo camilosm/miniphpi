@@ -68,8 +68,7 @@ Command* SyntaticAnalysis::procStatement() {
 			procIf();
 			break;
 		case TKN_WHILE:
-			printf("\n\nWHILE\n\n");
-			procWhile();
+			cmd = procWhile();
 			break;
 		case TKN_FOREACH:
 			printf("\n\nFOREACH\n\n");
@@ -122,14 +121,18 @@ void SyntaticAnalysis::procIf() {
 }
 
 // <while> ::= while '(' <boolexpr> ')' '{' <code> '}'
-void SyntaticAnalysis::procWhile() {
+WhileCommand* SyntaticAnalysis::procWhile() {
 	matchToken(TKN_WHILE);
+	int line = m_lex.line();
 	matchToken(TKN_OPEN_PAR);
-	procBoolExpr();
+	BoolExpr* cond = procBoolExpr();
 	matchToken(TKN_CLOSE_PAR);
 	matchToken(TKN_OPEN_CUR);
-	procCode();
+	Command* cmd = procCode();
 	matchToken(TKN_CLOSE_CUR);
+
+	WhileCommand* whilecmd = new WhileCommand(line, cond, cmd);
+	return whilecmd;
 }
 
 // <foreach> ::= foreach '(' <expr> as <var> [ '=>' <var> ] ')' '{' <code> '}'
@@ -206,33 +209,58 @@ AssignCommand* SyntaticAnalysis::procAssign() {
 }
 
 // <boolexpr> ::= [ '!' ] <cmpexpr> [ (and | or) <boolexpr> ]
-void SyntaticAnalysis::procBoolExpr() {
-	if(m_current.type == TKN_NOT)
+BoolExpr* SyntaticAnalysis::procBoolExpr() {
+	BoolExpr* expr;
+	if(m_current.type == TKN_NOT){
 		m_current = m_lex.nextToken();
-	procCmpExpr();
-	if(m_current.type == TKN_AND || m_current.type == TKN_OR){
-		m_current = m_lex.nextToken();
-		procBoolExpr();
+		BoolExpr* cmpexpr = procCmpExpr();
+		expr = new NotBoolExpr(m_lex.line(), cmpexpr);
 	}
+	else
+		expr = procCmpExpr();
+	if(m_current.type == TKN_AND || m_current.type == TKN_OR){
+		CompositeBoolExpr::BoolOp op;
+		if(m_current.type == TKN_ADD)
+			op = CompositeBoolExpr::And;
+		else
+			op = CompositeBoolExpr::And;
+		m_current = m_lex.nextToken();
+		BoolExpr* boolexpr = procBoolExpr();
+		expr = new CompositeBoolExpr(m_lex.line(), expr, op, boolexpr);
+	}
+	return expr;
 }
 
 // <cmpexpr> ::= <expr> ('==' | '!=' | '<' | '>' | '<=' | '>=') <expr>
-void SyntaticAnalysis::procCmpExpr() {
-	procExpr();
+BoolExpr* SyntaticAnalysis::procCmpExpr() {
+	Expr* left = procExpr();
+	SingleBoolExpr::RelOp op;
 	switch(m_current.type){
 		case TKN_EQUAL:
+			op = SingleBoolExpr::Equal;
+			break;
 		case TKN_NOT_EQUAL:
+			op = SingleBoolExpr::NotEqual;
+			break;
 		case TKN_LOWER:
+			op = SingleBoolExpr::LowerThan;
+			break;
 		case TKN_GREATER:
+			op = SingleBoolExpr::GreaterThan;
+			break;
 		case TKN_LOWER_EQ:
+			op = SingleBoolExpr::LowerEqual;
+			break;
 		case TKN_GREATER_EQ:
-			m_current = m_lex.nextToken();
+			op = SingleBoolExpr::GreaterEqual;
 			break;
 		default:
 			showError();
 			break;
 	}
-	procExpr();
+	m_current = m_lex.nextToken();
+	Expr* right = procExpr();
+	return new SingleBoolExpr(m_lex.line(), left, op, right);
 }
 
 // <expr> ::= <term> { ('+' | '-' | '.') <term> }
