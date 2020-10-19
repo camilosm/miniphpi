@@ -6,6 +6,7 @@
 #include "../lexical/LexicalAnalysis.h"
 #include "../interpreter/expr/AccessExpr.h"
 #include "../interpreter/expr/ArrayExpr.h"
+#include "../interpreter/expr/BinaryExpr.h"
 #include "../interpreter/expr/ConstExpr.h"
 #include "../interpreter/expr/ReadExpr.h"
 #include "../interpreter/expr/UnaryExpr.h"

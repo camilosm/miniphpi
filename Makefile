@@ -13,6 +13,7 @@ OBJS=mphpi.o \
 	interpreter/value/StringValue.o \
 	interpreter/expr/AccessExpr.o \
 	interpreter/expr/ArrayExpr.o \
+	interpreter/expr/BinaryExpr.o \
 	interpreter/expr/ConstExpr.o \
 	interpreter/expr/ReadExpr.o \
 	interpreter/expr/UnaryExpr.o \
@@ -49,6 +50,8 @@ interpreter/value/StringValue.o: interpreter/value/Value.h
 interpreter/expr/AccessExpr.o: interpreter/expr/SetExpr.h interpreter/value/ArrayValue.h interpreter/util/Memory.h interpreter/util/Interruption.h
 
 interpreter/expr/ArrayExpr.o: interpreter/expr/Expr.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h interpreter/value/ArrayValue.h
+
+interpreter/expr/BinaryExpr.o: interpreter/expr/Expr.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h interpreter/value/ArrayValue.h interpreter/util/Interruption.h
 
 interpreter/expr/ConstExpr.o: interpreter/expr/Expr.h
 

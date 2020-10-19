@@ -239,11 +239,27 @@ void SyntaticAnalysis::procCmpExpr() {
 Expr* SyntaticAnalysis::procExpr() {
 	Expr* expr;
 	expr = procTerm();
-	// falta completar
-	// while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT){
-	// 	m_current = m_lex.nextToken();
-	// 	procTerm();
-	// }
+	while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT){
+		Expr* right;
+		BinaryExpr::BinaryOp op;
+		switch(m_current.type){
+			case TKN_ADD:
+				op = BinaryExpr::AddOp;
+				break;
+			case TKN_SUB:
+				op = BinaryExpr::SubOp;
+				break;
+			case TKN_CONCAT:
+				op = BinaryExpr::ConcatOp;
+				break;
+			default:
+				showError();
+				break;
+		}
+		m_current = m_lex.nextToken();
+		right = procTerm();
+		expr = new BinaryExpr(m_lex.line(), expr, op, right);
+	}
 	return expr;
 }
 
@@ -251,12 +267,27 @@ Expr* SyntaticAnalysis::procExpr() {
 Expr* SyntaticAnalysis::procTerm() {
 	Expr* expr;
 	expr = procFactor();
-	// falta completar
-	// while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
-	// 	m_current = m_lex.nextToken();
-	// 	procFactor();
-	// }
-
+	while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
+		Expr* right;
+		BinaryExpr::BinaryOp op;
+		switch(m_current.type){
+			case TKN_MUL:
+				op = BinaryExpr::MulOp;
+				break;
+			case TKN_DIV:
+				op = BinaryExpr::DivOp;
+				break;
+			case TKN_MOD:
+				op = BinaryExpr::ModOp;
+				break;
+			default:
+				showError();
+				break;
+		}
+		m_current = m_lex.nextToken();
+		right = procFactor();
+		expr = new BinaryExpr(m_lex.line(), expr, op, right);
+	}
 	return expr;
 }
 

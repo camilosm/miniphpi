@@ -12,10 +12,20 @@ echo $teste[1];
 
 $a = array("x" => array("y" => "z"));
 echo ($a["x"])["y"];
-*/
+
 
 
 $a = 5;
 $a++;
 ++$a;
-echo ++$a;
+echo $a++;
+echo $a;
+
+*/
+
+$a = "teste";
+$b = " de ";
+$c = "concat";
+$d = 5;
+echo 5 - $d . "teste";
+echo 5/2*10;
