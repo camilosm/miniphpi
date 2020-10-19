@@ -9,7 +9,7 @@ VarVarExpr::VarVarExpr(int line, Expr* varvar)
 VarVarExpr::~VarVarExpr(){
 }
 
-Type* VarVarExpr::process(){
+std::string VarVarExpr::process(){
 	int i=-1;
 	std::string varvar = ((StringValue*) m_varvar)->value();
 	Type* value = nullptr;
@@ -23,20 +23,20 @@ Type* VarVarExpr::process(){
 		if(!value || (i && value->type() != Type::StringType))
 			Interruption::semantical(line());
 		varvar = ((StringValue*) value)->value();
+		if(varvar == "")
+			Interruption::semantical(line());
 	}
-	value = Memory::read("$"+varvar);
-	return value;
+	// value = Memory::read("$"+varvar);
+	return varvar;
 }
 
 Type* VarVarExpr::expr(){
-	Type* value = process();
+	std::string varvar = process();
+	Type* value = Memory::read("$"+varvar);
 	return value;
 }
 
 void VarVarExpr::setExpr(Type* value){
-	Type* destination = process();
-	if(destination->type() != Type::StringType)
-		Interruption::semantical(line());
-	std::string name = ((StringValue*) destination)->value();
-	Memory::write(name, value);
+	std::string varvar = process();
+	Memory::write("$"+varvar, value);
 }

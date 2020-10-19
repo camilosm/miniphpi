@@ -1,43 +1,8 @@
-/* echo 5 + 5;
-echo "teste";
-echo read "escreva na tela"; */
+$t = 5;
+$b = "t";
+echo $t;
+echo $$b;
+$$b = 21;
+echo $$b;
+echo $t;
 
-/* $teste = array(1 => 5, "b" => "B");
-
-echo $teste[1]++;
-$teste[1] = "C";
-echo $teste[1];
-$teste[1] = 1;
-echo $teste[1];
-
-$a = array("x" => array("y" => "z"));
-echo ($a["x"])["y"];
-
-
-
-$a = 5;
-$a++;
-++$a;
-echo $a++;
-echo $a;
-
-$a = "teste";
-$b = " de ";
-$c = "concat";
-$d = 5;
-echo 5 - $d . "teste";
-echo 5/2*10;
-
-
-$x = 2;
-while(!$x==0 and $x>1){
-	echo "Thiago é newba";
-	$x--;
-}
-
-*/
-
-$ar = array("a" => 1, "b" => 2);
-foreach($ar as $x){
-	echo $x."uhu";
-}

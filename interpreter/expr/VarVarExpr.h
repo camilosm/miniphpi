@@ -15,7 +15,7 @@ class VarVarExpr: public SetExpr{
 		virtual void setExpr(Type* value);
 
 	private:
-		virtual Type* process();
+		virtual std::string process();
 		Expr* m_varvar;
 
 };
