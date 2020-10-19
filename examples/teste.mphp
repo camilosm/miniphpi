@@ -2,16 +2,13 @@
 echo "teste";
 echo read "escreva na tela"; */
 
-$b = 200;
-$b -= 4;
-echo $b;
-$b += 4;
-echo $b;
-$b *= 4;
-echo $b;
-$b %= 4;
-echo $b;
-$b .= 4;
-echo $b;
-$b *= 4;
-echo $b;
+$teste = array(1 => "A", "b" => "B");
+
+echo $teste[1];
+$teste[1] = "C";
+echo $teste[1];
+$teste[1] = 1;
+echo $teste[1];
+
+$a = array("x" => array("y" => "z"));
+echo ($a["x"])["y"];
