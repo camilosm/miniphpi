@@ -28,9 +28,16 @@ $d = 5;
 echo 5 - $d . "teste";
 echo 5/2*10;
 
-*/
+
 $x = 2;
 while(!$x==0 and $x>1){
 	echo "Thiago é newba";
 	$x--;
+}
+
+*/
+
+$ar = array("a" => 1, "b" => 2);
+foreach($ar as $x){
+	echo $x."uhu";
 }

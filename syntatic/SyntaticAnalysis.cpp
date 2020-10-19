@@ -61,7 +61,7 @@ BlocksCommand* SyntaticAnalysis::procCode() {
 
 // <statement> ::= <if> | <while> | <foreach> | <echo> | <assign>
 Command* SyntaticAnalysis::procStatement() {
-	Command* cmd;
+	Command* cmd = nullptr;
 	switch(m_current.type){
 		case TKN_IF:
 			printf("\n\nIF\n\n");
@@ -71,8 +71,7 @@ Command* SyntaticAnalysis::procStatement() {
 			cmd = procWhile();
 			break;
 		case TKN_FOREACH:
-			printf("\n\nFOREACH\n\n");
-			procForeach();
+			cmd = procForeach();
 			break;
 		case TKN_ECHO:
 			cmd = procEcho();
@@ -88,7 +87,6 @@ Command* SyntaticAnalysis::procStatement() {
 			showError();
 			break;
 	}
-
 	return cmd;
 }
 
@@ -98,7 +96,7 @@ Command* SyntaticAnalysis::procStatement() {
 void SyntaticAnalysis::procIf() {
 	matchToken(TKN_IF);
 	matchToken(TKN_OPEN_PAR);
-	procBoolExpr();
+	//BoolExpr* cond = procBoolExpr();
 	matchToken(TKN_CLOSE_PAR);
 	matchToken(TKN_OPEN_CUR);
 	procCode();
@@ -136,20 +134,24 @@ WhileCommand* SyntaticAnalysis::procWhile() {
 }
 
 // <foreach> ::= foreach '(' <expr> as <var> [ '=>' <var> ] ')' '{' <code> '}'
-void SyntaticAnalysis::procForeach() {
+ForeachCommand* SyntaticAnalysis::procForeach() {
 	matchToken(TKN_FOREACH);
+	int line = m_lex.line();
 	matchToken(TKN_OPEN_PAR);
-	procExpr();
+	Expr* array = procExpr();
 	matchToken(TKN_AS);
-	procVar();
+	Variable* key = procVar();
+	Variable* value = nullptr;
 	if(m_current.type == TKN_ARROW){
 		m_current = m_lex.nextToken();
-		procVar();
+		value = procVar();
 	}
 	matchToken(TKN_CLOSE_PAR);
 	matchToken(TKN_OPEN_CUR);
-	procCode();
+	Command* cmds = procCode();
 	matchToken(TKN_CLOSE_CUR);
+	ForeachCommand* foreach = new ForeachCommand(line, array, cmds, key, value);
+	return foreach;
 }
 
 // <echo> ::= echo <expr> ';'

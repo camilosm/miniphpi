@@ -25,6 +25,7 @@ OBJS=mphpi.o \
 	interpreter/command/AssignCommand.o \
 	interpreter/command/BlocksCommand.o \
 	interpreter/command/EchoCommand.o \
+	interpreter/command/ForeachCommand.o \
 	interpreter/command/WhileCommand.o
 
 
@@ -75,9 +76,11 @@ interpreter/expr/VarVarExpr.o: interpreter/expr/VarVarExpr.h interpreter/util/Me
 
 interpreter/command/AssignCommand.o: interpreter/expr/Expr.h interpreter/expr/Variable.h
 
-interpreter/command/BlocksCommand.o: interpreter/command/Command.h
+interpreter/command/BlocksCommand.o: interpreter/command/BlocksCommand.h interpreter/command/Command.h
 
-interpreter/command/EchoCommand.o: interpreter/command/Command.h interpreter/expr/Expr.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h interpreter/value/ArrayValue.h
+interpreter/command/EchoCommand.o: interpreter/command/EchoCommand.h interpreter/command/Command.h interpreter/expr/Expr.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h interpreter/value/ArrayValue.h
+
+interpreter/command/ForeachCommand.o: interpreter/command/ForeachCommand.h interpreter/command/Command.h interpreter/value/ArrayValue.h interpreter/expr/SetExpr.h interpreter/expr/Variable.h interpreter/util/Interruption.h
 
 interpreter/command/WhileCommand.o:  interpreter/command/WhileCommand.h interpreter/expr/BoolExpr.h
 

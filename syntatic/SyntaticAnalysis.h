@@ -21,6 +21,7 @@
 #include "../interpreter/command/BlocksCommand.h"
 #include "../interpreter/command/Command.h"
 #include "../interpreter/command/EchoCommand.h"
+#include "../interpreter/command/ForeachCommand.h"
 #include "../interpreter/command/WhileCommand.h"
 
 
@@ -45,7 +46,7 @@ private:
     Command* procStatement();
     void procIf();
     WhileCommand* procWhile();
-    void procForeach();
+    ForeachCommand* procForeach();
     EchoCommand* procEcho();
     AssignCommand* procAssign();
     BoolExpr* procBoolExpr();
