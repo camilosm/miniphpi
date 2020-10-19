@@ -4,6 +4,13 @@ BlocksCommand::BlocksCommand(int line):Command(line){
 }
 
 BlocksCommand::~BlocksCommand(){
+	Command* cmd;
+	std::list<Command*>::iterator it, end;
+	end = m_cmds.end();
+	for(it = m_cmds.begin(); it!=end; it++){
+		cmd = *it;
+		delete cmd;
+	}
 }
 
 void BlocksCommand::addCommand(Command* cmd){
@@ -11,11 +18,11 @@ void BlocksCommand::addCommand(Command* cmd){
 }
 
 void BlocksCommand::execute(){
-	Command* m;
-	std::list<Command*>::iterator it, ed;
-	ed = m_cmds.end();
-	for(it = m_cmds.begin(); it!=ed; it++){
-		m = *it;
-		m->execute();
+	Command* cmd;
+	std::list<Command*>::iterator it, end;
+	end = m_cmds.end();
+	for(it = m_cmds.begin(); it!=end; it++){
+		cmd = *it;
+		cmd->execute();
 	}
 }
