@@ -11,8 +11,11 @@ AssignCommand::~AssignCommand(){
 
 void AssignCommand::execute(){
 
-	if(m_op == NoAssignOp)
+	if(m_op == NoAssignOp){
+		m_left->expr();
 		return;
+	}
+
 
 	if(!m_left->writable() || m_left->expr()->type() == Type::ArrayType){
 		Interruption::semantical(line());

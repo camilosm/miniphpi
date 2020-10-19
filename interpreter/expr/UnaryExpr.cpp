@@ -17,7 +17,9 @@ Type* UnaryExpr::expr(){
 	if(m_expr->expr()->type() == Type::StringType){
 		StringValue* sv = (StringValue*) m_expr->expr();
 		std::string str = sv->value();
-		if(str.find_first_not_of("0123456789") == std::string::npos)
+		if(str == "")
+			value = 0;
+		else if(str.find_first_not_of("0123456789") == std::string::npos)
 			value = std::stoi(str);
 		else
 			Interruption::semantical(line());
