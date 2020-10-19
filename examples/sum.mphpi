@@ -1,0 +1,23 @@
+/* summation test
+input:
+4
+8
+15
+16
+23
+42
+0
+
+expected output:
+108
+*/
+
+
+
+$sum = 0;
+$i = read "Digite um valor";
+while($i>0){
+	$sum += $i;
+	$i = read "Digite outro valor ou 0 para encerrar";
+}
+echo $sum;
