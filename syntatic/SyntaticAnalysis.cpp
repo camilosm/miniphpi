@@ -64,8 +64,7 @@ Command* SyntaticAnalysis::procStatement() {
 	Command* cmd = nullptr;
 	switch(m_current.type){
 		case TKN_IF:
-			printf("\n\nIF\n\n");
-			procIf();
+			cmd = procIf();
 			break;
 		case TKN_WHILE:
 			cmd = procWhile();
@@ -93,29 +92,39 @@ Command* SyntaticAnalysis::procStatement() {
 // <if> ::= if '(' <boolexpr> ')' '{' <code> '}'
 //              { elseif '(' <boolexpr> ')' '{' <code> '}' }
 //              [ else '{' <code> '}' ]
-void SyntaticAnalysis::procIf() {
+IfCommand* SyntaticAnalysis::procIf() {
 	matchToken(TKN_IF);
+	int line = m_lex.line();
 	matchToken(TKN_OPEN_PAR);
-	//BoolExpr* cond = procBoolExpr();
+	BoolExpr* cond = procBoolExpr();
 	matchToken(TKN_CLOSE_PAR);
 	matchToken(TKN_OPEN_CUR);
-	procCode();
+	Command* cmd = procCode();
 	matchToken(TKN_CLOSE_CUR);
+	IfCommand* ifcmd = new IfCommand(line, cond, cmd);
+	IfCommand* anterior = ifcmd;
 	while(m_current.type == TKN_ELSEIF){
+		line = m_lex.line();
 		m_current = m_lex.nextToken();
 		matchToken(TKN_OPEN_PAR);
-		procBoolExpr();
+		cond = procBoolExpr();
 		matchToken(TKN_CLOSE_PAR);
 		matchToken(TKN_OPEN_CUR);
-		procCode();
+		cmd = procCode();
 		matchToken(TKN_CLOSE_CUR);
+		IfCommand* elseif = new IfCommand(line, cond, cmd);
+		anterior->addElseCommands(elseif);
+		anterior = elseif;
 	}
 	if(m_current.type == TKN_ELSE){
+		line = m_lex.line();
 		m_current = m_lex.nextToken();
 		matchToken(TKN_OPEN_CUR);
-		procCode();
+		cmd = procCode();
 		matchToken(TKN_CLOSE_CUR);
+		anterior->addElseCommands(cmd);
 	}
+	return ifcmd;
 }
 
 // <while> ::= while '(' <boolexpr> ')' '{' <code> '}'
@@ -225,7 +234,7 @@ BoolExpr* SyntaticAnalysis::procBoolExpr() {
 		if(m_current.type == TKN_ADD)
 			op = CompositeBoolExpr::And;
 		else
-			op = CompositeBoolExpr::And;
+			op = CompositeBoolExpr::Or;
 		m_current = m_lex.nextToken();
 		BoolExpr* boolexpr = procBoolExpr();
 		expr = new CompositeBoolExpr(m_lex.line(), expr, op, boolexpr);

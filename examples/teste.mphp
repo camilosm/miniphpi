@@ -1,8 +1,13 @@
-$t = 5;
-$b = "t";
-echo $t;
-echo $$b;
-$$b = 21;
-echo $$b;
-echo $t;
-
+$x=16;
+if($x>16){
+	echo "maior";
+}
+elseif($x<15){
+	echo "menor";
+}
+elseif($x==16){
+	echo "16";
+}
+else{
+	echo "igual";
+}
