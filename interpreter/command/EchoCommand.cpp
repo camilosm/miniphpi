@@ -14,18 +14,18 @@ void EchoCommand::execute(){
 		case Type::IntegerType:{
 			IntegerValue* iv = (IntegerValue*) value;
 			int v = iv->value();
-			std::cout << v << std::endl;
+			std::cout << v;
 			break;
 		}
 		case Type::StringType: {
 			StringValue* sv = (StringValue*) value;
 			std::string v = sv->value();
-			std::cout << v << std::endl;
+			std::cout << v;
 			break;
 		}
 
 		case Type::ArrayType: {
-			std::cout << "array" << std::endl;
+			std::cout << "array";
 			break;
 		}
 
