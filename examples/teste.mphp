@@ -2,9 +2,9 @@
 echo "teste";
 echo read "escreva na tela"; */
 
-$teste = array(1 => "A", "b" => "B");
+/* $teste = array(1 => 5, "b" => "B");
 
-echo $teste[1];
+echo $teste[1]++;
 $teste[1] = "C";
 echo $teste[1];
 $teste[1] = 1;
@@ -12,3 +12,9 @@ echo $teste[1];
 
 $a = array("x" => array("y" => "z"));
 echo ($a["x"])["y"];
+*/
+
+
+$a = "5";
+echo $a++;
+echo $a;

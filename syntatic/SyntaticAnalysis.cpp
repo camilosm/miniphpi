@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
+#include <iostream>
 
 
 #include "SyntaticAnalysis.h"
@@ -326,39 +327,61 @@ Expr* SyntaticAnalysis::procRead() {
 
 // <value> ::= [ ('++' | '--') ] <access> | <access> [ ('++' | '--') ]
 Expr* SyntaticAnalysis::procValue() {
+	Expr* expr;
+	Expr* access;
+	int line = m_lex.line();
 	if(m_current.type != TKN_DOLAR && m_current.type != TKN_VAR && m_current.type != TKN_OPEN_PAR){
-		if(m_current.type == TKN_INC || m_current.type == TKN_DEC)
+		if(m_current.type == TKN_INC){
 			m_current = m_lex.nextToken();
+			access = procAccess();
+			expr = new UnaryExpr(line, access, UnaryExpr::PreIncOp);
+		}
+		else if(m_current.type == TKN_DEC){
+			m_current = m_lex.nextToken();
+			access = procAccess();
+			expr = new UnaryExpr(line, access, UnaryExpr::PreDecOp);
+		}
 		else
 			showError();
-		return procAccess();
 	}
 	else{
-		return procAccess();
-		if(m_current.type == TKN_INC || m_current.type == TKN_DEC)
+		access = procAccess();
+		expr = access;
+		if(m_current.type == TKN_INC){
 			m_current = m_lex.nextToken();
+			expr = new UnaryExpr(line, access, UnaryExpr::PosIncOp);
+		}
+		else if(m_current.type == TKN_DEC){
+			m_current = m_lex.nextToken();
+			expr = new UnaryExpr(line, access, UnaryExpr::PosDecOp);
+		}
 	}
+	return expr;
 }
 
 // <access> ::= ( <varvar> | '(' <expr> ')' ) [ '[' <expr> ']' ]
 Expr* SyntaticAnalysis::procAccess() {
-	return procVarVar();
-
 	Expr* expr;
-	if(m_current.type == TKN_DOLAR || m_current.type == TKN_VAR)
-		expr = procVarVar();
+	Expr* base;
+	if(m_current.type == TKN_DOLAR || m_current.type == TKN_VAR){
+		base = procVarVar();
+	}
 	else if(m_current.type == TKN_OPEN_PAR){
 		m_current = m_lex.nextToken();
-		procExpr();
+		base = procExpr();
 		matchToken(TKN_CLOSE_PAR);
 	}
 	else
 		showError();
 	if(m_current.type == TKN_OPEN_BRA){
 		m_current = m_lex.nextToken();
-		procExpr();
+		Expr* index = procExpr();
+		expr = new AccessExpr(m_lex.line(), base, index);
 		matchToken(TKN_CLOSE_BRA);
 	}
+	else
+		expr = base;
+		// expr = new AccessExpr(m_lex.line(), base);
 	return expr;
 };
 

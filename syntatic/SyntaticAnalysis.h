@@ -4,9 +4,11 @@
 #include <map>
 
 #include "../lexical/LexicalAnalysis.h"
+#include "../interpreter/expr/AccessExpr.h"
 #include "../interpreter/expr/ArrayExpr.h"
 #include "../interpreter/expr/ConstExpr.h"
 #include "../interpreter/expr/ReadExpr.h"
+#include "../interpreter/expr/UnaryExpr.h"
 #include "../interpreter/expr/Variable.h"
 #include "../interpreter/expr/VarVarExpr.h"
 #include "../interpreter/value/IntegerValue.h"

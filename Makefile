@@ -15,6 +15,7 @@ OBJS=mphpi.o \
 	interpreter/expr/ArrayExpr.o \
 	interpreter/expr/ConstExpr.o \
 	interpreter/expr/ReadExpr.o \
+	interpreter/expr/UnaryExpr.o \
 	interpreter/expr/Variable.o \
 	interpreter/expr/VarVarExpr.o \
 	interpreter/command/AssignCommand.o \
@@ -52,6 +53,8 @@ interpreter/expr/ArrayExpr.o: interpreter/expr/Expr.h interpreter/value/IntegerV
 interpreter/expr/ConstExpr.o: interpreter/expr/Expr.h
 
 interpreter/expr/ReadExpr.o: interpreter/expr/Expr.h interpreter/command/EchoCommand.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h
+
+interpreter/expr/UnaryExpr.o: interpreter/expr/SetExpr.h interpreter/value/IntegerValue.h interpreter/value/StringValue.h interpreter/util/Interruption.h
 
 interpreter/expr/Variable.o: interpreter/expr/SetExpr.h
 
