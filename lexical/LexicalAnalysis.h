@@ -19,7 +19,6 @@ class LexicalAnalysis {
 		int m_line;
 		FILE* m_file;
 		SymbolTable m_st;
-
 };
 
 #endif
