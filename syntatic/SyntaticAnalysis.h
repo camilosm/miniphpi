@@ -38,6 +38,8 @@ private:
 
 	void semanticalError(int line);
     void matchToken(enum TokenType type);
+	void advance();
+	void eat(enum TokenType type);
     void showError();
 
     BlocksCommand* procCode();

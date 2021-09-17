@@ -13,7 +13,7 @@ SyntaticAnalysis::~SyntaticAnalysis() {
 
 Command* SyntaticAnalysis::start() {
     Command* cmd = procCode();
-	matchToken(TKN_END_OF_FILE);
+	eat(TKN_END_OF_FILE);
 	return cmd;
 }
 
@@ -21,6 +21,19 @@ void SyntaticAnalysis::matchToken(enum TokenType type) {
     // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
         m_current = m_lex.nextToken();
+    } else {
+        showError();
+    }
+}
+
+void SyntaticAnalysis::advance(){
+	m_current = m_lex.nextToken();
+}
+
+void SyntaticAnalysis::eat(enum TokenType type){
+    // printf("Expected (..., %d), found (\"%s\", %d)\n", type, m_current.token.c_str(), m_current.type);
+    if (type == m_current.type) {
+        advance();
     } else {
         showError();
     }
@@ -92,35 +105,35 @@ Command* SyntaticAnalysis::procStatement() {
 //              { elseif '(' <boolexpr> ')' '{' <code> '}' }
 //              [ else '{' <code> '}' ]
 IfCommand* SyntaticAnalysis::procIf() {
-	matchToken(TKN_IF);
+	eat(TKN_IF);
 	int line = m_lex.line();
-	matchToken(TKN_OPEN_PAR);
+	eat(TKN_OPEN_PAR);
 	BoolExpr* cond = procBoolExpr();
-	matchToken(TKN_CLOSE_PAR);
-	matchToken(TKN_OPEN_CUR);
+	eat(TKN_CLOSE_PAR);
+	eat(TKN_OPEN_CUR);
 	Command* cmd = procCode();
-	matchToken(TKN_CLOSE_CUR);
+	eat(TKN_CLOSE_CUR);
 	IfCommand* ifcmd = new IfCommand(line, cond, cmd);
 	IfCommand* anterior = ifcmd;
 	while(m_current.type == TKN_ELSEIF){
 		line = m_lex.line();
-		m_current = m_lex.nextToken();
-		matchToken(TKN_OPEN_PAR);
+		advance();
+		eat(TKN_OPEN_PAR);
 		cond = procBoolExpr();
-		matchToken(TKN_CLOSE_PAR);
-		matchToken(TKN_OPEN_CUR);
+		eat(TKN_CLOSE_PAR);
+		eat(TKN_OPEN_CUR);
 		cmd = procCode();
-		matchToken(TKN_CLOSE_CUR);
+		eat(TKN_CLOSE_CUR);
 		IfCommand* elseif = new IfCommand(line, cond, cmd);
 		anterior->addElseCommands(elseif);
 		anterior = elseif;
 	}
 	if(m_current.type == TKN_ELSE){
 		line = m_lex.line();
-		m_current = m_lex.nextToken();
-		matchToken(TKN_OPEN_CUR);
+		advance();
+		eat(TKN_OPEN_CUR);
 		cmd = procCode();
-		matchToken(TKN_CLOSE_CUR);
+		eat(TKN_CLOSE_CUR);
 		anterior->addElseCommands(cmd);
 	}
 	return ifcmd;
@@ -128,14 +141,14 @@ IfCommand* SyntaticAnalysis::procIf() {
 
 // <while> ::= while '(' <boolexpr> ')' '{' <code> '}'
 WhileCommand* SyntaticAnalysis::procWhile() {
-	matchToken(TKN_WHILE);
+	eat(TKN_WHILE);
 	int line = m_lex.line();
-	matchToken(TKN_OPEN_PAR);
+	eat(TKN_OPEN_PAR);
 	BoolExpr* cond = procBoolExpr();
-	matchToken(TKN_CLOSE_PAR);
-	matchToken(TKN_OPEN_CUR);
+	eat(TKN_CLOSE_PAR);
+	eat(TKN_OPEN_CUR);
 	Command* cmd = procCode();
-	matchToken(TKN_CLOSE_CUR);
+	eat(TKN_CLOSE_CUR);
 
 	WhileCommand* whilecmd = new WhileCommand(line, cond, cmd);
 	return whilecmd;
@@ -143,32 +156,32 @@ WhileCommand* SyntaticAnalysis::procWhile() {
 
 // <foreach> ::= foreach '(' <expr> as <var> [ '=>' <var> ] ')' '{' <code> '}'
 ForeachCommand* SyntaticAnalysis::procForeach() {
-	matchToken(TKN_FOREACH);
+	eat(TKN_FOREACH);
 	int line = m_lex.line();
-	matchToken(TKN_OPEN_PAR);
+	eat(TKN_OPEN_PAR);
 	Expr* array = procExpr();
-	matchToken(TKN_AS);
+	eat(TKN_AS);
 	Variable* key = procVar();
 	Variable* value = nullptr;
 	if(m_current.type == TKN_ARROW){
-		m_current = m_lex.nextToken();
+		advance();
 		value = procVar();
 	}
-	matchToken(TKN_CLOSE_PAR);
-	matchToken(TKN_OPEN_CUR);
+	eat(TKN_CLOSE_PAR);
+	eat(TKN_OPEN_CUR);
 	Command* cmds = procCode();
-	matchToken(TKN_CLOSE_CUR);
+	eat(TKN_CLOSE_CUR);
 	ForeachCommand* foreach = new ForeachCommand(line, array, cmds, key, value);
 	return foreach;
 }
 
 // <echo> ::= echo <expr> ';'
 EchoCommand* SyntaticAnalysis::procEcho() {
-	matchToken(TKN_ECHO);
+	eat(TKN_ECHO);
 	int line = m_lex.line();
 	Expr* expr = procExpr();
 	EchoCommand* echo = new EchoCommand(line, expr);
-	matchToken(TKN_SEMICOLON);
+	eat(TKN_SEMICOLON);
 	return echo;
 }
 
@@ -208,13 +221,13 @@ AssignCommand* SyntaticAnalysis::procAssign() {
 	}
 	AssignCommand* assign;
 	if(op!=AssignCommand::NoAssignOp){
-		m_current = m_lex.nextToken();
+		advance();
 		Expr* right = procExpr();
 		assign = new AssignCommand(line, left, op, right);
 	}
 	else
 		assign = new AssignCommand(line, left, op);
-	matchToken(TKN_SEMICOLON);
+	eat(TKN_SEMICOLON);
 	return assign;
 }
 
@@ -222,7 +235,7 @@ AssignCommand* SyntaticAnalysis::procAssign() {
 BoolExpr* SyntaticAnalysis::procBoolExpr() {
 	BoolExpr* expr;
 	if(m_current.type == TKN_NOT){
-		m_current = m_lex.nextToken();
+		advance();
 		BoolExpr* cmpexpr = procCmpExpr();
 		expr = new NotBoolExpr(m_lex.line(), cmpexpr);
 	}
@@ -234,7 +247,7 @@ BoolExpr* SyntaticAnalysis::procBoolExpr() {
 			op = CompositeBoolExpr::And;
 		else
 			op = CompositeBoolExpr::Or;
-		m_current = m_lex.nextToken();
+		advance();
 		BoolExpr* boolexpr = procBoolExpr();
 		expr = new CompositeBoolExpr(m_lex.line(), expr, op, boolexpr);
 	}
@@ -268,7 +281,7 @@ BoolExpr* SyntaticAnalysis::procCmpExpr() {
 			showError();
 			break;
 	}
-	m_current = m_lex.nextToken();
+	advance();
 	Expr* right = procExpr();
 	return new SingleBoolExpr(m_lex.line(), left, op, right);
 }
@@ -294,7 +307,7 @@ Expr* SyntaticAnalysis::procExpr() {
 				showError();
 				break;
 		}
-		m_current = m_lex.nextToken();
+		advance();
 		right = procTerm();
 		expr = new BinaryExpr(m_lex.line(), expr, op, right);
 	}
@@ -322,7 +335,7 @@ Expr* SyntaticAnalysis::procTerm() {
 				showError();
 				break;
 		}
-		m_current = m_lex.nextToken();
+		advance();
 		right = procFactor();
 		expr = new BinaryExpr(m_lex.line(), expr, op, right);
 	}
@@ -362,32 +375,32 @@ Expr* SyntaticAnalysis::procFactor() {
 
 // <array> ::= array '(' [ <expr> '=>' <expr> { ',' <expr> '=>' <expr> } ] ')'
 Expr* SyntaticAnalysis::procArray() {
-	matchToken(TKN_ARRAY);
-	matchToken(TKN_OPEN_PAR);
+	eat(TKN_ARRAY);
+	eat(TKN_OPEN_PAR);
 	int line = m_lex.line();
 	ArrayExpr* array = new ArrayExpr(line);
 	if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
 		Expr* key;
 		Expr* value;
 		key = procExpr();
-		matchToken(TKN_ARROW);
+		eat(TKN_ARROW);
 		value = procExpr();
 		array->insert(key, value);
 		while(m_current.type == TKN_COMMA){
-			m_current = m_lex.nextToken();
+			advance();
 			key = procExpr();
-			matchToken(TKN_ARROW);
+			eat(TKN_ARROW);
 			value = procExpr();
 			array->insert(key, value);
 		}
 	}
-	matchToken(TKN_CLOSE_PAR);
+	eat(TKN_CLOSE_PAR);
 	return array;
 }
 
 // <read> ::= read <expr>
 Expr* SyntaticAnalysis::procRead() {
-	matchToken(TKN_READ);
+	eat(TKN_READ);
 	int line = m_lex.line();
 	Expr* msg = procExpr();
 	Expr* expr = new ReadExpr(line, msg);
@@ -401,12 +414,12 @@ Expr* SyntaticAnalysis::procValue() {
 	int line = m_lex.line();
 	if(m_current.type != TKN_DOLAR && m_current.type != TKN_VAR && m_current.type != TKN_OPEN_PAR){
 		if(m_current.type == TKN_INC){
-			m_current = m_lex.nextToken();
+			advance();
 			access = procAccess();
 			expr = new UnaryExpr(line, access, UnaryExpr::PreIncOp);
 		}
 		else if(m_current.type == TKN_DEC){
-			m_current = m_lex.nextToken();
+			advance();
 			access = procAccess();
 			expr = new UnaryExpr(line, access, UnaryExpr::PreDecOp);
 		}
@@ -417,11 +430,11 @@ Expr* SyntaticAnalysis::procValue() {
 		access = procAccess();
 		expr = access;
 		if(m_current.type == TKN_INC){
-			m_current = m_lex.nextToken();
+			advance();
 			expr = new UnaryExpr(line, access, UnaryExpr::PosIncOp);
 		}
 		else if(m_current.type == TKN_DEC){
-			m_current = m_lex.nextToken();
+			advance();
 			expr = new UnaryExpr(line, access, UnaryExpr::PosDecOp);
 		}
 	}
@@ -436,17 +449,17 @@ Expr* SyntaticAnalysis::procAccess() {
 		base = procVarVar();
 	}
 	else if(m_current.type == TKN_OPEN_PAR){
-		m_current = m_lex.nextToken();
+		advance();
 		base = procExpr();
-		matchToken(TKN_CLOSE_PAR);
+		eat(TKN_CLOSE_PAR);
 	}
 	else
 		showError();
 	if(m_current.type == TKN_OPEN_BRA){
-		m_current = m_lex.nextToken();
+		advance();
 		Expr* index = procExpr();
 		expr = new AccessExpr(m_lex.line(), base, index);
-		matchToken(TKN_CLOSE_BRA);
+		eat(TKN_CLOSE_BRA);
 	}
 	else
 		expr = base;
@@ -460,11 +473,11 @@ Expr* SyntaticAnalysis::procVarVar() {
 		std::string varvar;
 		while(m_current.type == TKN_DOLAR){
 			varvar += "$";
-			m_current = m_lex.nextToken();
+			advance();
 		}
 		varvar += m_current.token;
 		int line = m_lex.line();
-		matchToken(TKN_VAR);
+		eat(TKN_VAR);
 		StringValue* str = new StringValue(varvar);
 		Expr* expr = (Expr*) str;
 		Expr* varvarexpr = new VarVarExpr(line, expr);
@@ -476,7 +489,7 @@ Expr* SyntaticAnalysis::procVarVar() {
 
 ConstExpr* SyntaticAnalysis::procNumber() {
 	std::string n_str = m_current.token;
-	matchToken(TKN_NUMBER);
+	eat(TKN_NUMBER);
 	int line = m_lex.line();
 	int n = atoi(n_str.c_str());
 	IntegerValue* integer = new IntegerValue(n);
@@ -486,7 +499,7 @@ ConstExpr* SyntaticAnalysis::procNumber() {
 
 ConstExpr* SyntaticAnalysis::procString() {
 	std::string str = m_current.token;
-	matchToken(TKN_STRING);
+	eat(TKN_STRING);
 	int line = m_lex.line();
 	StringValue* string = new StringValue(str);
 	ConstExpr* ce = new ConstExpr(line, string);
@@ -495,7 +508,7 @@ ConstExpr* SyntaticAnalysis::procString() {
 
 Variable* SyntaticAnalysis::procVar() {
 	std::string nome = m_current.token;
-	matchToken(TKN_VAR);
+	eat(TKN_VAR);
 	int line = m_lex.line();
 	Variable* var = new Variable(line, nome);
 	return var;
