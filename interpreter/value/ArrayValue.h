@@ -8,7 +8,7 @@
 
 class Type;
 
-class ArrayValue : public Value<std::map<std::string,Type*> > {
+class ArrayValue : public Value<std::map<std::string,Type*>> {
     public:
         ArrayValue(const std::map<std::string,Type*>& value);
         virtual ~ArrayValue();
