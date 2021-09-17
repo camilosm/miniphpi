@@ -1,6 +1,8 @@
 #ifndef TOKENTYPE_H
 #define TOKENTYPE_H
 
+#include <string>
+
 enum TokenType {
     // SPECIALS
     TKN_UNEXPECTED_EOF = -2,

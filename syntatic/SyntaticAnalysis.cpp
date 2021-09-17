@@ -1,9 +1,8 @@
+#include "SyntaticAnalysis.h"
+
 #include <cstdlib>
 #include <cstdio>
 #include <iostream>
-
-
-#include "SyntaticAnalysis.h"
 
 SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex) :
     m_lex(lex), m_current(m_lex.nextToken()) {

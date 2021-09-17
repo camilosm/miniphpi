@@ -1,8 +1,6 @@
 #ifndef SYNTATIC_ANALYSIS_H
 #define SYNTATIC_ANALYSIS_H
 
-#include <map>
-
 #include "../lexical/LexicalAnalysis.h"
 #include "../interpreter/expr/AccessExpr.h"
 #include "../interpreter/expr/ArrayExpr.h"
@@ -25,8 +23,7 @@
 #include "../interpreter/command/IfCommand.h"
 #include "../interpreter/command/WhileCommand.h"
 
-
-class Command;
+// class Command;
 
 class SyntaticAnalysis {
 public:

@@ -1,8 +1,6 @@
 #ifndef LEXICAL_ANALYSIS_H
 #define LEXICAL_ANALYSIS_H
 
-#include <cstdio>
-#include <string>
 #include "Lexeme.h"
 #include "SymbolTable.h"
 
