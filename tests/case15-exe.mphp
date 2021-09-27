@@ -1,0 +1,69 @@
+/* read the matrix */
+$dim = read "Entre com a dimensao: ";
+$matrix = array();
+$r = 0;
+while ($r < $dim) {
+    $matrix[$r] = array();
+
+    $c = 0;
+    while ($c < $dim) {
+        ($matrix[$r])[$c] = read "entre com valor na posicao " . ($r + 1) . "x" . ($c + 1) . ": ";
+        $c++;
+    }
+
+    $r++;
+}
+
+echo "\n";
+
+/* show the matrix */
+foreach ($matrix as $row => $line) {
+    echo "[";
+    foreach ($line as $col => $v ) {
+        echo " " . $v;
+    }
+    echo " ]\n";
+}
+
+/* calculate the first part of the determinant */
+$det1 = 0;
+$c = 0;
+while ($c < $dim) {
+    $j = $c;
+    $tmp = 1;
+
+    $i = 0;
+    while ($i < $dim) {
+        $tmp *= ($matrix[$i])[$j];
+        $j = ($j + 1) % $dim;
+        $i++;
+    }
+    $det1 = $det1 + $tmp;
+
+    $c++;
+}
+
+/* calculate the second part of the determinant */
+$det2 = 0;
+$c = 0;
+while ($c < $dim) {
+    $j = $c;
+    $tmp = 1;
+
+    $i = 0;
+    while ($i < $dim) {
+        $tmp *= ($matrix[$i])[$j];
+        $j = ($j - 1) % $dim;
+        if ($j < 0) {
+            $j += $dim;
+        }
+
+        $i++;
+    }
+    $det2 = $det2 + $tmp;
+
+    $c++;
+}
+
+/* print the determinant */
+echo "= " . ($det1 - $det2) . "\n";

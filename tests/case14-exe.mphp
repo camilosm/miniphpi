@@ -1,0 +1,57 @@
+/* Ler a quantidade */
+$s = read "Entre com a quantidade de alunos: ";
+if ($s < 0) {
+    echo "Quantidade invalida\n";
+} else {
+    /* Ler os nomes dos alunos */
+    $i = 0;
+    $nomes = array();
+    while ($i < $s) {
+        $n = read "Entre com o nome do aluno " . ($i + 1) . ": ";
+        if ($n == "") {
+            echo "  Nome invalido\n";
+        } else {
+            $nomes[$i] = $n;
+            $i++;
+        }
+    }
+
+    /* Ler as notas dos alunos */
+    $notas = array();
+    foreach ($nomes as $id => $n) {
+        $tmp = 0;
+        while ($tmp == 0) {
+            $x = read "Entre com a nota do aluno " . $n . ": ";
+            if ($x >= 0 and $x <= 100) {
+                $notas[$n] = $x;
+                $tmp = 1;
+            } else {
+                echo "  Nota invalida\n";
+            }
+        }
+    }
+
+    /* Obter a menor e maior nota */
+    $count = 0;
+    $soma = 0;
+    foreach ($notas as $n => $v) {
+        if ($count++ == 0) {
+            $menor = $n;
+            $maior = $n;
+        } else {
+            if ($notas[$n] < $notas[$menor]) {
+                $menor = $n;
+            }
+
+            if ($notas[$n] > $notas[$maior]) {
+                $maior = $n;
+            }
+        }
+
+        $soma += $v;
+    }
+
+    echo "\nA menor nota foi do " . $menor . " com " . $notas[$menor] . " pontos\n";
+    echo "A maior nota foi do " . $maior . " com " . $notas[$maior] . " pontos\n";
+    echo "Media das notas: " . ($soma / $count) . "\n";
+}

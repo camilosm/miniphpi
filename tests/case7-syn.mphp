@@ -1,0 +1,9 @@
+$a = read "entre com um numero: ";
+if ($a < 0) {
+  $b = "menor";
+} else if ($a > 0) {
+  $b = "maior";
+} else {
+  $b = igual";
+}
+echo $b;

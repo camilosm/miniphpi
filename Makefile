@@ -35,6 +35,9 @@ all: $(TARGET)
 clean:
 	rm -rf $(TARGET) $(OBJS)
 
+test: $(TARGET)
+	(cd tests; ./test.sh)
+
 mphp.o:
 
 lexical/SymbolTable.o: lexical/TokenType.h

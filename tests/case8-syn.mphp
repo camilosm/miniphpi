@@ -1,0 +1,6 @@
+$a = 1;
+if ($a > 0 && $a < 2) {
+	echo "ok";
+} else {
+	"nao ok";
+}
