@@ -11,12 +11,6 @@ SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex) :
 SyntaticAnalysis::~SyntaticAnalysis() {
 }
 
-Command* SyntaticAnalysis::start() {
-    Command* cmd = procCode();
-	eat(TKN_END_OF_FILE);
-	return cmd;
-}
-
 void SyntaticAnalysis::matchToken(enum TokenType type) {
     // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
 	if (type == m_current.type) {
@@ -56,6 +50,12 @@ void SyntaticAnalysis::showError() {
     }
 
     exit(1);
+}
+
+Command* SyntaticAnalysis::start() {
+    Command* cmd = procCode();
+	eat(TKN_END_OF_FILE);
+	return cmd;
 }
 
 // <code> ::= { <statement> }
