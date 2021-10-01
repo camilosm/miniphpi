@@ -6,7 +6,7 @@ reset=`tput sgr0`
 
 cases=()
 
-for n in {1..2}; do
+for n in {1..15}; do
     source=case${n}-*.mphp;
     input=case${n}-*.in;
     output=case${n}-*.out;
