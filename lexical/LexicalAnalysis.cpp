@@ -90,7 +90,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
 				if(c == '*')
 					state = 4;
 				else if(c == -1){
-					lex.type = TKN_END_OF_FILE;
+					lex.type = TKN_UNEXPECTED_EOF;
 					state = 16;
 				}
 				else
@@ -103,7 +103,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
 				else if(c == '/')
 					state = 1;
 				else if(c == -1){
-					lex.type = TKN_END_OF_FILE;
+					lex.type = TKN_UNEXPECTED_EOF;
 					state = 16;
 				}
 				else
