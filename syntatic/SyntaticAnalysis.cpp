@@ -38,7 +38,7 @@ void SyntaticAnalysis::showError() {
 
     switch (m_current.type) {
         case TKN_INVALID_TOKEN:
-            printf("Lexema inválido [%s]\n", m_current.token.c_str());
+            printf("Lexema inválido [%s]\n", m_current.token.c_str());
             break;
         case TKN_UNEXPECTED_EOF:
         case TKN_END_OF_FILE:
