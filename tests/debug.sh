@@ -12,26 +12,17 @@ for n in {1..15}; do
     input=case${n}-*.in;
     output=case${n}-*.out;
 
-    echo "Running: $(basename ${source})";
-    echo "--- Test source ---";
-    cat ${input};
-    echo "=====";
-
-    echo "--- Expected output ---";
-    cat ${output};
-    echo "--- Executed output ---";
-    (timeout 5 ../mphpi ${source} < $input);
-    echo "=====";
-    read -p "Passed? " equal;
-	if [ $equal = "y" ]
+    executed=$(timeout 5 ../mphpi ${source} < $input 2>/dev/null)
+	difference=$(diff <(echo "$executed") <(cat ${output}))
+	if [ $? -eq 0 ]
 		then
-			cases[$n]="${green}passed${reset}"
+			echo "Case $n: ${green}passed${reset}"
 		else
-			cases[$n]="${red}failed${reset}"
+			echo "Case $n: ${red}failed${reset}"
+			echo "--- Expected output ---";
+			cat ${output};
+			echo "--- Executed output ---";
+			(timeout 1 ../mphpi ${source} < $input);
 	fi
-	clear
-done
-echo "Results:"
-for case in "${!cases[@]}"; do
-	printf "%s -> %s\n" "$case" "${cases[$case]}"
+	echo ""
 done
