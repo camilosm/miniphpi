@@ -1,6 +1,11 @@
 #!/bin/bash
 
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+
 cases=()
+
 clear
 for n in {1..15}; do
     source=case${n}-*.mphp;
@@ -20,9 +25,9 @@ for n in {1..15}; do
     read -p "Passed? " equal;
 	if [ $equal = "y" ]
 		then
-    		cases[$n]="passed"
+			cases[$n]="${green}passed${reset}"
 		else
-			cases[$n]="failed"
+			cases[$n]="${red}failed${reset}"
 	fi
 	clear
 done

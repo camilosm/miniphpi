@@ -1,5 +1,9 @@
 #!/bin/bash
 
+red=`tput setaf 1`
+green=`tput setaf 2`
+reset=`tput sgr0`
+
 cases=()
 
 for n in {1..15}; do
@@ -9,12 +13,12 @@ for n in {1..15}; do
     output=case${n}-*.out;
 
 	executed=$(timeout 5 ../mphpi ${source} < $input 2>/dev/null)
-	diff <(echo "$executed") <(echo "$output") >/dev/null
+	diff <(echo "$executed") <(cat ${output}) >/dev/null 2>/dev/null
 	if [ $? -eq 0 ]
 		then
-			cases[$n]="passed"
+			cases[$n]="${green}passed${reset}"
 		else
-			cases[$n]="failed"
+			cases[$n]="${red}failed${reset}"
 	fi
 done
 
