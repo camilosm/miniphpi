@@ -7,21 +7,15 @@ for n in {1..15}; do
     source=case${n}-*.mphp;
     input=case${n}-*.in;
     output=case${n}-*.out;
-    
-    clear;
 
-    echo "Running: $(basename ${source})";
-    echo "--- Test source ---";
-    cat ${input};
-    echo "=====";
-
-    echo "--- Expected output ---";
-    cat ${output};
-    echo "--- Executed output ---";
-    (timeout 5 ../mphpi ${source} < $input);
-    echo "=====";
-    read -p "Passed? " equal;
-    cases[$n]=$equal
+	executed=$(timeout 5 ../mphpi ${source} < $input 2>/dev/null)
+	diff <(echo "$executed") <(echo "$output") >/dev/null
+	if [ $? -eq 0 ]
+		then
+			cases[$n]="passed"
+		else
+			cases[$n]="failed"
+	fi
 done
 
 for case in "${!cases[@]}"; do
