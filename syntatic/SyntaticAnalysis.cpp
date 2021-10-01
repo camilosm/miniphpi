@@ -45,7 +45,7 @@ void SyntaticAnalysis::showError() {
             printf("Fim de arquivo inesperado\n");
             break;
         default:
-            printf("Lexema não esperado [%s]\n", m_current.token.c_str());
+            printf("Lexema não esperado [%s]\n", m_current.token.c_str());
             break;
     }
 
