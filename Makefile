@@ -38,7 +38,14 @@ clean:
 	@echo "Done!"
 
 test: $(TARGET)
+	@echo "Testing:"
 	@(cd tests; ./test.sh)
+	@echo "Done!"
+
+debug: $(TARGET)
+	@echo "Debugging:"
+	@(cd tests; ./debug.sh)
+	@echo "Done!"
 
 mphp.o:
 
