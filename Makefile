@@ -29,14 +29,16 @@ OBJS=mphpi.o \
 	interpreter/command/IfCommand.o \
 	interpreter/command/WhileCommand.o
 
-
 all: $(TARGET)
+	@echo "Done!"
 
 clean:
-	rm -rf $(TARGET) $(OBJS)
+	@echo "Cleaning..."
+	@rm -rf $(TARGET) $(OBJS)
+	@echo "Done!"
 
 test: $(TARGET)
-	(cd tests; ./test.sh)
+	@(cd tests; ./test.sh)
 
 mphp.o:
 
@@ -92,6 +94,9 @@ interpreter/command/WhileCommand.o:  interpreter/command/WhileCommand.h interpre
 
 
 $(TARGET):	$(OBJS)
-			$(CXX) -o $(TARGET) $(OBJS)
+	@echo "Linking..."
+	@$(CXX) -o $(TARGET) $(OBJS)
+
 .cpp.o:
-	$(CXX) $(CXXFLAGS) -c -o $@ $<
+	@echo "Compiling $<"
+	@$(CXX) $(CXXFLAGS) -c -o $@ $<
