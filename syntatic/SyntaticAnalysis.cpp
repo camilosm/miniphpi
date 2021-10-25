@@ -470,13 +470,13 @@ Expr* SyntaticAnalysis::procAccess() {
 // <varvar> ::= '$' <varvar> | <var>
 Expr* SyntaticAnalysis::procVarVar() {
 	if(m_current.type == TKN_DOLAR){
+		int line = m_lex.line();
 		std::string varvar;
 		while(m_current.type == TKN_DOLAR){
 			varvar += "$";
 			advance();
 		}
 		varvar += m_current.token;
-		int line = m_lex.line();
 		eat(TKN_VAR);
 		StringValue* str = new StringValue(varvar);
 		Expr* expr = (Expr*) str;
