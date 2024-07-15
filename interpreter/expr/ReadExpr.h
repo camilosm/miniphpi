@@ -9,14 +9,14 @@
 #include "../command/EchoCommand.h"
 
 class ReadExpr: public Expr{
-	public:
-		ReadExpr(int line, Expr* msg);
-		virtual ~ReadExpr();
+    public:
+        ReadExpr(int line, Expr* msg);
+        virtual ~ReadExpr();
 
-		virtual Type* expr();
+        virtual Type* expr();
 
-	private:
-		Expr* m_msg;
+    private:
+        Expr* m_msg;
 
 };
 

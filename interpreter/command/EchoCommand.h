@@ -12,14 +12,14 @@
 #include "../value/ArrayValue.h"
 
 class EchoCommand: public Command{
-	public:
-		EchoCommand(int line, Expr* expr);
-		virtual ~EchoCommand();
+    public:
+        EchoCommand(int line, Expr* expr);
+        virtual ~EchoCommand();
 
-		virtual void execute();
+        virtual void execute();
 
-	private:
-		Expr* m_expr;
+    private:
+        Expr* m_expr;
 };
 
 #endif

@@ -8,12 +8,12 @@
 #include "../value/StringValue.h"
 
 class Memory {
-	public:
-		static Type* read(const std::string& name);
-		static void write(const std::string& name, Type* value);
+    public:
+        static Type* read(const std::string& name);
+        static void write(const std::string& name, Type* value);
 
-	private:
-		static std::map<std::string, Type*> m_memory;
+    private:
+        static std::map<std::string, Type*> m_memory;
 
 };
 

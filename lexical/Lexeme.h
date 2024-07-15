@@ -6,18 +6,18 @@
 #include "TokenType.h"
 
 struct Lexeme {
-	std::string token;
-	enum TokenType type;
+    std::string token;
+    enum TokenType type;
 
-	Lexeme() : token(""), type(TKN_END_OF_FILE) {}
-	virtual ~Lexeme() {}
+    Lexeme() : token(""), type(TKN_END_OF_FILE) {}
+    virtual ~Lexeme() {}
 
-	const std::string str() {
-		std::stringstream ss;
+    const std::string str() {
+        std::stringstream ss;
 
-		ss << "(\"" << token << "\", " << tt2str(type) << ")";
-		return ss.str();
-	}
+        ss << "(\"" << token << "\", " << tt2str(type) << ")";
+        return ss.str();
+    }
 };
 
 

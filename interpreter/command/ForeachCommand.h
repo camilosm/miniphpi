@@ -8,15 +8,15 @@
 #include "../util/Interruption.h"
 
 class ForeachCommand: public Command{
-	public:
-		ForeachCommand(int line, Expr* expr, Command* cmds, Variable* key, Variable* value = nullptr);
-		virtual ~ForeachCommand();
-		virtual void execute();
-	private:
-		Expr* m_expr;
-		Command* m_cmds;
-		Variable* m_key;
-		Variable* m_value;
+    public:
+        ForeachCommand(int line, Expr* expr, Command* cmds, Variable* key, Variable* value = nullptr);
+        virtual ~ForeachCommand();
+        virtual void execute();
+    private:
+        Expr* m_expr;
+        Command* m_cmds;
+        Variable* m_key;
+        Variable* m_value;
 };
 
 #endif

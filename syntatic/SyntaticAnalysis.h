@@ -26,42 +26,42 @@
 // class Command;
 
 class SyntaticAnalysis{
-	public:
-		explicit SyntaticAnalysis(LexicalAnalysis& lex);
-		virtual ~SyntaticAnalysis();
+    public:
+        explicit SyntaticAnalysis(LexicalAnalysis& lex);
+        virtual ~SyntaticAnalysis();
 
-		Command* start();
+        Command* start();
 
-	private:
-		LexicalAnalysis& m_lex;
-		Lexeme m_current;
+    private:
+        LexicalAnalysis& m_lex;
+        Lexeme m_current;
 
-		void semanticalError(int line);
-		void matchToken(enum TokenType type);
-		void advance();
-		void eat(enum TokenType type);
-		void showError();
+        void semanticalError(int line);
+        void matchToken(enum TokenType type);
+        void advance();
+        void eat(enum TokenType type);
+        void showError();
 
-		BlocksCommand* procCode();
-		Command* procStatement();
-		IfCommand* procIf();
-		WhileCommand* procWhile();
-		ForeachCommand* procForeach();
-		EchoCommand* procEcho();
-		AssignCommand* procAssign();
-		BoolExpr* procBoolExpr();
-		BoolExpr* procCmpExpr();
-		Expr* procExpr();
-		Expr* procTerm();
-		Expr* procFactor();
-		Expr* procArray();
-		Expr* procRead();
-		Expr* procValue();
-		Expr* procAccess();
-		Expr* procVarVar();
-		ConstExpr* procNumber();
-		ConstExpr* procString();
-		Variable* procVar();
+        BlocksCommand* procCode();
+        Command* procStatement();
+        IfCommand* procIf();
+        WhileCommand* procWhile();
+        ForeachCommand* procForeach();
+        EchoCommand* procEcho();
+        AssignCommand* procAssign();
+        BoolExpr* procBoolExpr();
+        BoolExpr* procCmpExpr();
+        Expr* procExpr();
+        Expr* procTerm();
+        Expr* procFactor();
+        Expr* procArray();
+        Expr* procRead();
+        Expr* procValue();
+        Expr* procAccess();
+        Expr* procVarVar();
+        ConstExpr* procNumber();
+        ConstExpr* procString();
+        Variable* procVar();
 };
 
 #endif

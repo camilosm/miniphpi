@@ -6,15 +6,15 @@
 #include "Command.h"
 
 class BlocksCommand: public Command{
-	public:
-		BlocksCommand(int line);
-		virtual ~BlocksCommand();
+    public:
+        BlocksCommand(int line);
+        virtual ~BlocksCommand();
 
-		void addCommand(Command* cmd);
-		virtual void execute();
+        void addCommand(Command* cmd);
+        virtual void execute();
 
-	private:
-		std::list<Command*> m_cmds;
+    private:
+        std::list<Command*> m_cmds;
 
 };
 

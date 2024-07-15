@@ -4,14 +4,14 @@
 #include "Expr.h"
 
 class ConstExpr: public Expr{
-	public:
-		ConstExpr(int line, Type* value);
-		virtual ~ConstExpr();
+    public:
+        ConstExpr(int line, Type* value);
+        virtual ~ConstExpr();
 
-		virtual Type* expr();
+        virtual Type* expr();
 
-	private:
-		Type* m_value;
+    private:
+        Type* m_value;
 };
 
 #endif

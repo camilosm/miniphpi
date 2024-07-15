@@ -11,14 +11,14 @@
 #include "../value/ArrayValue.h"
 
 class ArrayExpr: public Expr{
-	public:
-		ArrayExpr(int line);
-		virtual ~ArrayExpr();
+    public:
+        ArrayExpr(int line);
+        virtual ~ArrayExpr();
 
-		virtual void insert(Expr* key, Expr* value);
-		virtual Type* expr();
-	private:
-		std::map<Expr*,Expr*> m_array;
+        virtual void insert(Expr* key, Expr* value);
+        virtual Type* expr();
+    private:
+        std::map<Expr*,Expr*> m_array;
 };
 
 

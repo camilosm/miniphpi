@@ -8,14 +8,14 @@
 #include "../util/Memory.h"
 
 class AccessExpr: public SetExpr{
-	public:
-		AccessExpr(int line, Expr* base, Expr* index = nullptr);
-		virtual ~AccessExpr();
-		virtual Type* expr();
-		virtual void setExpr(Type* value);
-	private:
-		Expr* m_base;
-		Expr* m_index;
+    public:
+        AccessExpr(int line, Expr* base, Expr* index = nullptr);
+        virtual ~AccessExpr();
+        virtual Type* expr();
+        virtual void setExpr(Type* value);
+    private:
+        Expr* m_base;
+        Expr* m_index;
 };
 
 #endif

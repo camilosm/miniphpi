@@ -7,16 +7,16 @@
 
 
 class VarVarExpr: public SetExpr{
-	public:
-		VarVarExpr(int line, Expr* varvar);
-		virtual ~VarVarExpr();
+    public:
+        VarVarExpr(int line, Expr* varvar);
+        virtual ~VarVarExpr();
 
-		virtual Type* expr();
-		virtual void setExpr(Type* value);
+        virtual Type* expr();
+        virtual void setExpr(Type* value);
 
-	private:
-		virtual std::string process();
-		Expr* m_varvar;
+    private:
+        virtual std::string process();
+        Expr* m_varvar;
 
 };
 

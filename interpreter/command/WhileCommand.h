@@ -5,15 +5,15 @@
 #include "../expr/BoolExpr.h"
 
 class WhileCommand: public Command{
-	public:
-		WhileCommand(int line, BoolExpr* cond, Command* cmds);
-		virtual ~WhileCommand();
+    public:
+        WhileCommand(int line, BoolExpr* cond, Command* cmds);
+        virtual ~WhileCommand();
 
-		virtual void execute();
+        virtual void execute();
 
-	private:
-		BoolExpr* m_cond;
-		Command* m_cmds;
+    private:
+        BoolExpr* m_cond;
+        Command* m_cmds;
 };
 
 #endif

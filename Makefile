@@ -3,31 +3,31 @@ CXXFLAGS=-g -ggdb -O2 -Wall
 
 TARGET=mphpi
 OBJS=mphpi.o \
-	lexical/SymbolTable.o \
-	lexical/LexicalAnalysis.o \
-	syntatic/SyntaticAnalysis.o \
-	interpreter/util/Interruption.o \
-	interpreter/util/Memory.o \
-	interpreter/value/ArrayValue.o \
-	interpreter/value/IntegerValue.o \
-	interpreter/value/StringValue.o \
-	interpreter/expr/AccessExpr.o \
-	interpreter/expr/ArrayExpr.o \
-	interpreter/expr/BinaryExpr.o \
-	interpreter/expr/CompositeBoolExpr.o \
-	interpreter/expr/ConstExpr.o \
-	interpreter/expr/NotBoolExpr.o \
-	interpreter/expr/ReadExpr.o \
-	interpreter/expr/SingleBoolExpr.o \
-	interpreter/expr/UnaryExpr.o \
-	interpreter/expr/Variable.o \
-	interpreter/expr/VarVarExpr.o \
-	interpreter/command/AssignCommand.o \
-	interpreter/command/BlocksCommand.o \
-	interpreter/command/EchoCommand.o \
-	interpreter/command/ForeachCommand.o \
-	interpreter/command/IfCommand.o \
-	interpreter/command/WhileCommand.o
+    lexical/SymbolTable.o \
+    lexical/LexicalAnalysis.o \
+    syntatic/SyntaticAnalysis.o \
+    interpreter/util/Interruption.o \
+    interpreter/util/Memory.o \
+    interpreter/value/ArrayValue.o \
+    interpreter/value/IntegerValue.o \
+    interpreter/value/StringValue.o \
+    interpreter/expr/AccessExpr.o \
+    interpreter/expr/ArrayExpr.o \
+    interpreter/expr/BinaryExpr.o \
+    interpreter/expr/CompositeBoolExpr.o \
+    interpreter/expr/ConstExpr.o \
+    interpreter/expr/NotBoolExpr.o \
+    interpreter/expr/ReadExpr.o \
+    interpreter/expr/SingleBoolExpr.o \
+    interpreter/expr/UnaryExpr.o \
+    interpreter/expr/Variable.o \
+    interpreter/expr/VarVarExpr.o \
+    interpreter/command/AssignCommand.o \
+    interpreter/command/BlocksCommand.o \
+    interpreter/command/EchoCommand.o \
+    interpreter/command/ForeachCommand.o \
+    interpreter/command/IfCommand.o \
+    interpreter/command/WhileCommand.o
 
 all: $(TARGET)
 	@echo "Done!"
@@ -47,7 +47,7 @@ debug: $(TARGET)
 	@(cd tests; ./debug.sh)
 	@echo "Done!"
 
-mphp.o:
+mphpi.o:
 
 lexical/SymbolTable.o: lexical/TokenType.h
 
@@ -97,10 +97,9 @@ interpreter/command/ForeachCommand.o: interpreter/command/ForeachCommand.h inter
 
 interpreter/command/IfCommand.o: interpreter/command/ForeachCommand.h interpreter/command/Command.h interpreter/expr/BinaryExpr.h
 
-interpreter/command/WhileCommand.o:  interpreter/command/WhileCommand.h interpreter/expr/BoolExpr.h
+interpreter/command/WhileCommand.o: interpreter/command/WhileCommand.h interpreter/expr/BoolExpr.h
 
-
-$(TARGET):	$(OBJS)
+$(TARGET): $(OBJS)
 	@echo "Linking..."
 	@$(CXX) -o $(TARGET) $(OBJS)
 

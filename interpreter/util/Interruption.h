@@ -2,8 +2,8 @@
 #define INTERRUPTION_H
 
 class Interruption{
-	public:
-		static void semantical(int line);
+    public:
+        static void semantical(int line);
 
 };
 

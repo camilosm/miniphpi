@@ -7,15 +7,15 @@
 #include <string>
 
 class SymbolTable {
-	public:
-		SymbolTable();
-		virtual ~SymbolTable();
+    public:
+        SymbolTable();
+        virtual ~SymbolTable();
 
-		bool contains(std::string token);
-		enum TokenType find(std::string token);
+        bool contains(std::string token);
+        enum TokenType find(std::string token);
 
-	private:
-		std::map<std::string, enum TokenType> m_st;
+    private:
+        std::map<std::string, enum TokenType> m_st;
 };
 
 #endif
