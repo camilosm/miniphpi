@@ -2,13 +2,11 @@
 
 #include <cstdio>
 #include <cctype>
-#include <cassert>
-#include <stdexcept>
 
 LexicalAnalysis::LexicalAnalysis(const char* filename) : m_line(1) {
     m_file = fopen(filename, "r");
     if(!m_file)
-        throw std::runtime_error("Unable to open file");
+        throw std::string("Unable to open file");
 }
 
 LexicalAnalysis::~LexicalAnalysis() {
@@ -318,7 +316,7 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             default:
-                assert(false);
+                throw std::string("Invalid state");
         }
     }
 
