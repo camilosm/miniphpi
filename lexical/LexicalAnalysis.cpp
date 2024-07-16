@@ -28,9 +28,9 @@ Lexeme LexicalAnalysis::nextToken() {
     int lines_token = 0;
     bool token_built = false;
 
-    while (state != 15 && state != 16){
+    while(state != 15 && state != 16) {
 
-        if(token_built){
+        if(token_built) {
             m_line+=lines_token;
             lines_token=0;
         }
@@ -39,42 +39,42 @@ Lexeme LexicalAnalysis::nextToken() {
         if(c=='\n')
             m_line++;
 
-        switch (state) {
+        switch(state) {
             case 1:
-                if(c == '\n' || c == ' ' || c == '\r' || c == '\t'){
+                if(c == '\n' || c == ' ' || c == '\r' || c == '\t') {
                     state = 1;
-                } else if(c == '/'){
+                } else if(c == '/') {
                     state = 2;
-                } else if(c == '+'){
+                } else if(c == '+') {
                     lex.token += (char)c;
                     state = 5;
-                } else if(c == '-'){
+                } else if(c == '-') {
                     lex.token += (char)c;
                     state = 6;
-                } else if(c == '.' || c == '*' || c == '%' || c == '!' || c == '<' || c == '>'){
+                } else if(c == '.' || c == '*' || c == '%' || c == '!' || c == '<' || c == '>') {
                     lex.token += (char)c;
                     state = 7;
-                } else if(c == '='){
+                } else if(c == '=') {
                     lex.token += (char)c;
                     state = 8;
-                } else if(c == '(' || c == ')' || c == '{' || c == '}' || c == ';' || c == ',' || c == '[' || c == ']'){
+                } else if(c == '(' || c == ')' || c == '{' || c == '}' || c == ';' || c == ',' || c == '[' || c == ']') {
                     lex.token += (char)c;
                     state = 15;
-                } else if(isalpha(c)){
+                } else if(isalpha(c)) {
                     lex.token += (char)c;
                     state = 9;
-                } else if(c == '$'){
+                } else if(c == '$') {
                     lex.token += (char)c;
                     state = 10;
-                } else if(isdigit(c)){
+                } else if(isdigit(c)) {
                     lex.token += (char)c;
                     state = 12;
-                } else if(c == '\"'){
+                } else if(c == '\"') {
                     state = 13;
-                } else if(c == -1){
+                } else if(c == -1) {
                     lex.type = TKN_END_OF_FILE;
                     state = 16;
-                } else{
+                } else {
                     lex.token += (char)c;
                     lex.type = TKN_INVALID_TOKEN;
                     state = 16;
@@ -84,11 +84,11 @@ Lexeme LexicalAnalysis::nextToken() {
             case 2:
                 if(c == '*')
                     state = 3;
-                else if(c == '='){
+                else if(c == '=') {
                     lex.token += "/=";
                     state = 15;
                 }
-                else{
+                else {
                     lex.token += '/';
                     ungetc(c, m_file);
                     if(c=='\n')
@@ -100,13 +100,13 @@ Lexeme LexicalAnalysis::nextToken() {
             case 3:
                 if(c == '*')
                     state = 4;
-                else if(c == -1){
+                else if(c == -1) {
                     lex.type = TKN_UNEXPECTED_EOF;
                     state = 16;
                     token_built = true;
                 }
-                else{
-                    if(c=='\n'){
+                else {
+                    if(c=='\n') {
                         lines_token++;
                         m_line--;
                     }
@@ -117,17 +117,17 @@ Lexeme LexicalAnalysis::nextToken() {
             case 4:
                 if(c == '*')
                     state = 4;
-                else if(c == '/'){
+                else if(c == '/') {
                     state = 1;
                     token_built = true;
                 }
-                else if(c == -1){
+                else if(c == -1) {
                     lex.type = TKN_UNEXPECTED_EOF;
                     state = 16;
                     token_built = true;
                 }
-                else{
-                    if(c=='\n'){
+                else {
+                    if(c=='\n') {
                         lines_token++;
                         m_line--;
                     }
@@ -136,12 +136,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 5:
-                if(c == '+' || c == '='){
+                if(c == '+' || c == '=') {
                     lex.token += (char)c;
                     state = 15;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -151,12 +151,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 6:
-                if(c == '-' || c == '='){
+                if(c == '-' || c == '=') {
                     lex.token += (char)c;
                     state = 15;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -166,12 +166,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 7:
-                if(c == '='){
+                if(c == '=') {
                     lex.token += (char)c;
                     state = 15;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -181,12 +181,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 8:
-                if(c == '>' || c == '='){
+                if(c == '>' || c == '=') {
                     lex.token += (char)c;
                     state = 15;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -200,7 +200,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 9;
                 } else {
-                    if(c != -1){
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -210,12 +210,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 10:
-                if(c == '_' || isalpha(c)){
+                if(c == '_' || isalpha(c)) {
                     lex.token += (char)c;
                     state = 11;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -225,12 +225,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 11:
-                if(c == '_' || isalpha(c) || isdigit(c)){
+                if(c == '_' || isalpha(c) || isdigit(c)) {
                     lex.token += (char)c;
                     state = 11;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -241,12 +241,12 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 12:
-                if(isdigit(c)){
+                if(isdigit(c)) {
                     lex.token+= (char)c;
                     state = 12;
                 }
-                else{
-                    if(c != -1){
+                else {
+                    if(c != -1) {
                         ungetc(c, m_file);
                         if(c=='\n')
                             m_line--;
@@ -260,20 +260,20 @@ Lexeme LexicalAnalysis::nextToken() {
                 if(c == '\\') {
                     state = 14;
                 }
-                else if(c == '\"'){
+                else if(c == '\"') {
                     lex.type = TKN_STRING;
                     state = 16;
                     token_built = true;
                 }
-                else{
+                else {
                     if(c == -1) {
                         lex.type = TKN_UNEXPECTED_EOF;
                         state = 16;
                         token_built = true;
                     }
-                    else{
+                    else {
                         lex.token += (char)c;
-                        if(c=='\n'){
+                        if(c=='\n') {
                             lines_token++;
                             m_line--;
                         }
@@ -283,7 +283,7 @@ Lexeme LexicalAnalysis::nextToken() {
                 break;
 
             case 14:
-                if(c == 'b'){
+                if(c == 'b') {
                     lex.token += '\b';
                     state = 13;
                 } else if(c == 'f') {
