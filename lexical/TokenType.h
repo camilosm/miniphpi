@@ -10,7 +10,7 @@ enum TokenType {
     TKN_END_OF_FILE = 0,
 
     // SYMBOLS
-    TKN_OPEN_PAR,       // (
+    TKN_OPEN_PAR,      // (
     TKN_CLOSE_PAR,     // )
     TKN_OPEN_CUR,      // {
     TKN_CLOSE_CUR,     // }
@@ -46,26 +46,26 @@ enum TokenType {
     TKN_DEC,           // --
 
     // KEYWORDS
-    TKN_IF,           // if
-    TKN_ELSEIF,       // elseif
-    TKN_ELSE,         // else
-    TKN_WHILE,        // while
-    TKN_FOREACH,      // foreach
-    TKN_AS,           // as
-    TKN_ECHO,         // echo
-    TKN_AND,          // and
-    TKN_OR,           // or
-    TKN_ARRAY,        // array
-    TKN_READ,         // read
+    TKN_IF,            // if
+    TKN_ELSEIF,        // elseif
+    TKN_ELSE,          // else
+    TKN_WHILE,         // while
+    TKN_FOREACH,       // foreach
+    TKN_AS,            // as
+    TKN_ECHO,          // echo
+    TKN_AND,           // and
+    TKN_OR,            // or
+    TKN_ARRAY,         // array
+    TKN_READ,          // read
 
     // OTHERS
-    TKN_NUMBER,       // numeros
-    TKN_STRING,       // strings
-    TKN_VAR          // variable
+    TKN_NUMBER,        // numbers
+    TKN_STRING,        // strings
+    TKN_VAR            // variable
 };
 
-inline std::string tt2str(enum TokenType type){
-    switch(type){
+inline std::string tt2str(enum TokenType type) {
+    switch(type) {
         // SPECIALS
         case TKN_UNEXPECTED_EOF:
             return "UNEXPECTED_EOF";
@@ -175,7 +175,7 @@ inline std::string tt2str(enum TokenType type){
             return "VAR";
 
         default:
-            throw std::string("invalid token type");
+            throw std::string("Invalid token type");
     }
 }
 
