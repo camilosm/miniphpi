@@ -25,7 +25,7 @@
 
 // class Command;
 
-class SyntaticAnalysis{
+class SyntaticAnalysis {
     public:
         explicit SyntaticAnalysis(LexicalAnalysis& lex);
         virtual ~SyntaticAnalysis();

@@ -4,8 +4,8 @@
 #include <cstdio>
 #include <iostream>
 
-SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex) :
-    m_lex(lex), m_current(m_lex.nextToken()) {
+SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex)
+    : m_lex(lex), m_current(m_lex.nextToken()) {
 }
 
 SyntaticAnalysis::~SyntaticAnalysis() {
@@ -20,11 +20,11 @@ void SyntaticAnalysis::matchToken(enum TokenType type) {
     }
 }
 
-void SyntaticAnalysis::advance(){
+void SyntaticAnalysis::advance() {
     m_current = m_lex.nextToken();
 }
 
-void SyntaticAnalysis::eat(enum TokenType type){
+void SyntaticAnalysis::eat(enum TokenType type) {
     // printf("Expected (..., %d), found (\"%s\", %d)\n", type, m_current.token.c_str(), m_current.type);
     if (type == m_current.type) {
         advance();
@@ -64,7 +64,7 @@ BlocksCommand* SyntaticAnalysis::procCode() {
 
     BlocksCommand* cmds = new BlocksCommand(line);
     Command *cmd;
-    while(m_current.type == TKN_IF || m_current.type == TKN_WHILE || m_current.type == TKN_FOREACH || m_current.type == TKN_ECHO || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+    while(m_current.type == TKN_IF || m_current.type == TKN_WHILE || m_current.type == TKN_FOREACH || m_current.type == TKN_ECHO || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR) {
         cmd = procStatement();
         cmds->addCommand(cmd);
     }
@@ -74,7 +74,7 @@ BlocksCommand* SyntaticAnalysis::procCode() {
 // <statement> ::= <if> | <while> | <foreach> | <echo> | <assign>
 Command* SyntaticAnalysis::procStatement() {
     Command* cmd = nullptr;
-    switch(m_current.type){
+    switch(m_current.type) {
         case TKN_IF:
             cmd = procIf();
             break;
@@ -115,7 +115,7 @@ IfCommand* SyntaticAnalysis::procIf() {
     eat(TKN_CLOSE_CUR);
     IfCommand* ifcmd = new IfCommand(line, cond, cmd);
     IfCommand* anterior = ifcmd;
-    while(m_current.type == TKN_ELSEIF){
+    while(m_current.type == TKN_ELSEIF) {
         line = m_lex.line();
         advance();
         eat(TKN_OPEN_PAR);
@@ -128,7 +128,7 @@ IfCommand* SyntaticAnalysis::procIf() {
         anterior->addElseCommands(elseif);
         anterior = elseif;
     }
-    if(m_current.type == TKN_ELSE){
+    if(m_current.type == TKN_ELSE) {
         line = m_lex.line();
         advance();
         eat(TKN_OPEN_CUR);
@@ -163,7 +163,7 @@ ForeachCommand* SyntaticAnalysis::procForeach() {
     eat(TKN_AS);
     Variable* key = procVar();
     Variable* value = nullptr;
-    if(m_current.type == TKN_ARROW){
+    if(m_current.type == TKN_ARROW) {
         advance();
         value = procVar();
     }
@@ -190,7 +190,7 @@ AssignCommand* SyntaticAnalysis::procAssign() {
     int line = m_lex.line();
     Expr* left = procValue();
     enum AssignCommand::AssignOp op;
-    switch(m_current.type){
+    switch(m_current.type) {
         case TKN_ASSIGN:
             op = AssignCommand::StdAssignOp;
             break;
@@ -220,7 +220,7 @@ AssignCommand* SyntaticAnalysis::procAssign() {
             break;
     }
     AssignCommand* assign;
-    if(op!=AssignCommand::NoAssignOp){
+    if(op!=AssignCommand::NoAssignOp) {
         advance();
         Expr* right = procExpr();
         assign = new AssignCommand(line, left, op, right);
@@ -234,14 +234,14 @@ AssignCommand* SyntaticAnalysis::procAssign() {
 // <boolexpr> ::= [ '!' ] <cmpexpr> [ (and | or) <boolexpr> ]
 BoolExpr* SyntaticAnalysis::procBoolExpr() {
     BoolExpr* expr;
-    if(m_current.type == TKN_NOT){
+    if(m_current.type == TKN_NOT) {
         advance();
         BoolExpr* cmpexpr = procCmpExpr();
         expr = new NotBoolExpr(m_lex.line(), cmpexpr);
     }
     else
         expr = procCmpExpr();
-    if(m_current.type == TKN_AND || m_current.type == TKN_OR){
+    if(m_current.type == TKN_AND || m_current.type == TKN_OR) {
         CompositeBoolExpr::BoolOp op;
         if(m_current.type == TKN_ADD)
             op = CompositeBoolExpr::And;
@@ -258,7 +258,7 @@ BoolExpr* SyntaticAnalysis::procBoolExpr() {
 BoolExpr* SyntaticAnalysis::procCmpExpr() {
     Expr* left = procExpr();
     SingleBoolExpr::RelOp op;
-    switch(m_current.type){
+    switch(m_current.type) {
         case TKN_EQUAL:
             op = SingleBoolExpr::Equal;
             break;
@@ -290,10 +290,10 @@ BoolExpr* SyntaticAnalysis::procCmpExpr() {
 Expr* SyntaticAnalysis::procExpr() {
     Expr* expr;
     expr = procTerm();
-    while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT){
+    while(m_current.type == TKN_ADD || m_current.type == TKN_SUB || m_current.type == TKN_CONCAT) {
         Expr* right;
         BinaryExpr::BinaryOp op;
-        switch(m_current.type){
+        switch(m_current.type) {
             case TKN_ADD:
                 op = BinaryExpr::AddOp;
                 break;
@@ -318,10 +318,10 @@ Expr* SyntaticAnalysis::procExpr() {
 Expr* SyntaticAnalysis::procTerm() {
     Expr* expr;
     expr = procFactor();
-    while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD){
+    while(m_current.type == TKN_MUL || m_current.type == TKN_DIV || m_current.type == TKN_MOD) {
         Expr* right;
         BinaryExpr::BinaryOp op;
-        switch(m_current.type){
+        switch(m_current.type) {
             case TKN_MUL:
                 op = BinaryExpr::MulOp;
                 break;
@@ -345,7 +345,7 @@ Expr* SyntaticAnalysis::procTerm() {
 // <factor> ::= <number> | <string> | <array> | <read> | <value>
 Expr* SyntaticAnalysis::procFactor() {
     Expr* expr;
-    switch(m_current.type){
+    switch(m_current.type) {
         case TKN_NUMBER:
             expr = procNumber();
             break;
@@ -379,14 +379,14 @@ Expr* SyntaticAnalysis::procArray() {
     eat(TKN_OPEN_PAR);
     int line = m_lex.line();
     ArrayExpr* array = new ArrayExpr(line);
-    if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR){
+    if(m_current.type == TKN_NUMBER || m_current.type == TKN_STRING || m_current.type == TKN_ARRAY || m_current.type == TKN_READ || m_current.type == TKN_INC || m_current.type == TKN_DEC || m_current.type == TKN_DOLAR || m_current.type == TKN_VAR || m_current.type == TKN_OPEN_PAR) {
         Expr* key;
         Expr* value;
         key = procExpr();
         eat(TKN_ARROW);
         value = procExpr();
         array->insert(key, value);
-        while(m_current.type == TKN_COMMA){
+        while(m_current.type == TKN_COMMA) {
             advance();
             key = procExpr();
             eat(TKN_ARROW);
@@ -412,13 +412,13 @@ Expr* SyntaticAnalysis::procValue() {
     Expr* expr;
     Expr* access;
     int line = m_lex.line();
-    if(m_current.type != TKN_DOLAR && m_current.type != TKN_VAR && m_current.type != TKN_OPEN_PAR){
-        if(m_current.type == TKN_INC){
+    if(m_current.type != TKN_DOLAR && m_current.type != TKN_VAR && m_current.type != TKN_OPEN_PAR) {
+        if(m_current.type == TKN_INC) {
             advance();
             access = procAccess();
             expr = new UnaryExpr(line, access, UnaryExpr::PreIncOp);
         }
-        else if(m_current.type == TKN_DEC){
+        else if(m_current.type == TKN_DEC) {
             advance();
             access = procAccess();
             expr = new UnaryExpr(line, access, UnaryExpr::PreDecOp);
@@ -426,14 +426,14 @@ Expr* SyntaticAnalysis::procValue() {
         else
             showError();
     }
-    else{
+    else {
         access = procAccess();
         expr = access;
-        if(m_current.type == TKN_INC){
+        if(m_current.type == TKN_INC) {
             advance();
             expr = new UnaryExpr(line, access, UnaryExpr::PosIncOp);
         }
-        else if(m_current.type == TKN_DEC){
+        else if(m_current.type == TKN_DEC) {
             advance();
             expr = new UnaryExpr(line, access, UnaryExpr::PosDecOp);
         }
@@ -445,17 +445,17 @@ Expr* SyntaticAnalysis::procValue() {
 Expr* SyntaticAnalysis::procAccess() {
     Expr* expr;
     Expr* base;
-    if(m_current.type == TKN_DOLAR || m_current.type == TKN_VAR){
+    if(m_current.type == TKN_DOLAR || m_current.type == TKN_VAR) {
         base = procVarVar();
     }
-    else if(m_current.type == TKN_OPEN_PAR){
+    else if(m_current.type == TKN_OPEN_PAR) {
         advance();
         base = procExpr();
         eat(TKN_CLOSE_PAR);
     }
     else
         showError();
-    if(m_current.type == TKN_OPEN_BRA){
+    if(m_current.type == TKN_OPEN_BRA) {
         advance();
         Expr* index = procExpr();
         expr = new AccessExpr(m_lex.line(), base, index);
@@ -469,10 +469,10 @@ Expr* SyntaticAnalysis::procAccess() {
 
 // <varvar> ::= '$' <varvar> | <var>
 Expr* SyntaticAnalysis::procVarVar() {
-    if(m_current.type == TKN_DOLAR){
+    if(m_current.type == TKN_DOLAR) {
         int line = m_lex.line();
         std::string varvar;
-        while(m_current.type == TKN_DOLAR){
+        while(m_current.type == TKN_DOLAR) {
             varvar += "$";
             advance();
         }
