@@ -64,7 +64,7 @@ enum TokenType {
     TKN_VAR            // variable
 };
 
-inline std::string tt2str(enum TokenType type) {
+inline std::string tt2str(TokenType type) {
     switch(type) {
         // SPECIALS
         case TKN_UNEXPECTED_EOF:

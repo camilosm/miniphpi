@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cctype>
 #include <cassert>
+#include <stdexcept>
 
 LexicalAnalysis::LexicalAnalysis(const char* filename) : m_line(1) {
     m_file = fopen(filename, "r");
@@ -19,8 +20,8 @@ int LexicalAnalysis::line() const {
     return m_line;
 }
 
-struct Lexeme LexicalAnalysis::nextToken() {
-    struct Lexeme lex;
+Lexeme LexicalAnalysis::nextToken() {
+    Lexeme lex;
 
     int state = 1;
 
@@ -322,7 +323,7 @@ struct Lexeme LexicalAnalysis::nextToken() {
     }
 
     if(state == 15)
-        lex.type = m_st.find(lex.token);
+        lex.type = m_symbol_table.find(lex.token);
 
     return lex;
 }

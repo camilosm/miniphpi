@@ -2,62 +2,59 @@
 
 SymbolTable::SymbolTable() {
     // SYMBOLS
-    m_st["("] = TKN_OPEN_PAR;
-    m_st[")"] = TKN_CLOSE_PAR;
-    m_st["{"] = TKN_OPEN_CUR;
-    m_st["}"] = TKN_CLOSE_CUR;
-    m_st["=>"] = TKN_ARROW;
-    m_st[","] = TKN_COMMA;
-    m_st[";"] = TKN_SEMICOLON;
-    m_st["["] = TKN_OPEN_BRA;
-    m_st["]"] = TKN_CLOSE_BRA;
-    m_st["$"] = TKN_DOLAR;
+    m_symbol_table["("] = TKN_OPEN_PAR;
+    m_symbol_table[")"] = TKN_CLOSE_PAR;
+    m_symbol_table["{"] = TKN_OPEN_CUR;
+    m_symbol_table["}"] = TKN_CLOSE_CUR;
+    m_symbol_table["=>"] = TKN_ARROW;
+    m_symbol_table[","] = TKN_COMMA;
+    m_symbol_table[";"] = TKN_SEMICOLON;
+    m_symbol_table["["] = TKN_OPEN_BRA;
+    m_symbol_table["]"] = TKN_CLOSE_BRA;
+    m_symbol_table["$"] = TKN_DOLAR;
 
     // OPERATORS
-    m_st["="] = TKN_ASSIGN;
-    m_st["+="] = TKN_ASSIGN_ADD;
-    m_st["-="] = TKN_ASSIGN_SUB;
-    m_st[".="] = TKN_ASSIGN_CONCAT;
-    m_st["*="] = TKN_ASSIGN_MUL;
-    m_st["/="] = TKN_ASSIGN_DIV;
-    m_st["%="] = TKN_ASSIGN_MOD;
-    m_st["!"] = TKN_NOT;
-    m_st["=="] = TKN_EQUAL;
-    m_st["!="] = TKN_NOT_EQUAL;
-    m_st["<"] = TKN_LOWER;
-    m_st[">"] = TKN_GREATER;
-    m_st["<="] = TKN_LOWER_EQ;
-    m_st[">="] = TKN_GREATER_EQ;
-    m_st["+"] = TKN_ADD;
-    m_st["-"] = TKN_SUB;
-    m_st["."] = TKN_CONCAT;
-    m_st["*"] = TKN_MUL;
-    m_st["/"] = TKN_DIV;
-    m_st["%"] = TKN_MOD;
-    m_st["++"] = TKN_INC;
-    m_st["--"] = TKN_DEC;
+    m_symbol_table["="] = TKN_ASSIGN;
+    m_symbol_table["+="] = TKN_ASSIGN_ADD;
+    m_symbol_table["-="] = TKN_ASSIGN_SUB;
+    m_symbol_table[".="] = TKN_ASSIGN_CONCAT;
+    m_symbol_table["*="] = TKN_ASSIGN_MUL;
+    m_symbol_table["/="] = TKN_ASSIGN_DIV;
+    m_symbol_table["%="] = TKN_ASSIGN_MOD;
+    m_symbol_table["!"] = TKN_NOT;
+    m_symbol_table["=="] = TKN_EQUAL;
+    m_symbol_table["!="] = TKN_NOT_EQUAL;
+    m_symbol_table["<"] = TKN_LOWER;
+    m_symbol_table[">"] = TKN_GREATER;
+    m_symbol_table["<="] = TKN_LOWER_EQ;
+    m_symbol_table[">="] = TKN_GREATER_EQ;
+    m_symbol_table["+"] = TKN_ADD;
+    m_symbol_table["-"] = TKN_SUB;
+    m_symbol_table["."] = TKN_CONCAT;
+    m_symbol_table["*"] = TKN_MUL;
+    m_symbol_table["/"] = TKN_DIV;
+    m_symbol_table["%"] = TKN_MOD;
+    m_symbol_table["++"] = TKN_INC;
+    m_symbol_table["--"] = TKN_DEC;
 
     // KEYWORDS
-    m_st["if"] = TKN_IF;
-    m_st["elseif"] = TKN_ELSEIF;
-    m_st["else"] = TKN_ELSE;
-    m_st["while"] = TKN_WHILE;
-    m_st["foreach"] = TKN_FOREACH;
-    m_st["as"] = TKN_AS;
-    m_st["echo"] = TKN_ECHO;
-    m_st["and"] = TKN_AND;
-    m_st["or"] = TKN_OR;
-    m_st["array"] = TKN_ARRAY;
-    m_st["read"] = TKN_READ;
+    m_symbol_table["if"] = TKN_IF;
+    m_symbol_table["elseif"] = TKN_ELSEIF;
+    m_symbol_table["else"] = TKN_ELSE;
+    m_symbol_table["while"] = TKN_WHILE;
+    m_symbol_table["foreach"] = TKN_FOREACH;
+    m_symbol_table["as"] = TKN_AS;
+    m_symbol_table["echo"] = TKN_ECHO;
+    m_symbol_table["and"] = TKN_AND;
+    m_symbol_table["or"] = TKN_OR;
+    m_symbol_table["array"] = TKN_ARRAY;
+    m_symbol_table["read"] = TKN_READ;
 }
 
-SymbolTable::~SymbolTable() {
+bool SymbolTable::contains(std::string& token) const {
+    return m_symbol_table.find(token) != m_symbol_table.end();
 }
 
-bool SymbolTable::contains(std::string token) {
-    return m_st.find(token) != m_st.end();
-}
-
-enum TokenType SymbolTable::find(std::string token) {
-    return this->contains(token) ? m_st[token] : TKN_INVALID_TOKEN;
+TokenType SymbolTable::find(std::string& token) {
+    return this->contains(token) ? m_symbol_table[token] : TKN_INVALID_TOKEN;
 }

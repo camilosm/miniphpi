@@ -9,13 +9,12 @@
 class SymbolTable {
     public:
         SymbolTable();
-        virtual ~SymbolTable();
 
-        bool contains(std::string token);
-        enum TokenType find(std::string token);
+        bool contains(std::string& token) const;
+        TokenType find(std::string& token);
 
     private:
-        std::map<std::string, enum TokenType> m_st;
+        std::map<std::string, TokenType> m_symbol_table;
 };
 
 #endif

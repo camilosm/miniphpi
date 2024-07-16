@@ -7,16 +7,15 @@
 class LexicalAnalysis {
     public:
         LexicalAnalysis(const char* filename);
-        virtual ~LexicalAnalysis();
+        ~LexicalAnalysis();
 
         int line() const;
-
-        struct Lexeme nextToken();
+        Lexeme nextToken();
 
     private:
         int m_line;
         FILE* m_file;
-        SymbolTable m_st;
+        SymbolTable m_symbol_table;
 };
 
 #endif
