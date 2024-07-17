@@ -23,12 +23,9 @@
 #include "../interpreter/command/IfCommand.h"
 #include "../interpreter/command/WhileCommand.h"
 
-// class Command;
-
 class SyntaticAnalysis {
     public:
-        explicit SyntaticAnalysis(LexicalAnalysis& lex);
-        virtual ~SyntaticAnalysis();
+        SyntaticAnalysis(LexicalAnalysis& lex);
 
         Command* start();
 
@@ -36,10 +33,8 @@ class SyntaticAnalysis {
         LexicalAnalysis& m_lex;
         Lexeme m_current;
 
-        void semanticalError(int line);
-        void matchToken(enum TokenType type);
         void advance();
-        void eat(enum TokenType type);
+        void eat(TokenType type);
         void showError();
 
         BlocksCommand* procCode();

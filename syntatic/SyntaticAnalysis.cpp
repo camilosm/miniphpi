@@ -1,51 +1,35 @@
 #include "SyntaticAnalysis.h"
 
-#include <cstdlib>
-#include <cstdio>
 #include <iostream>
+#include <iomanip>
+#include <cstdlib>
 
 SyntaticAnalysis::SyntaticAnalysis(LexicalAnalysis& lex)
     : m_lex(lex), m_current(m_lex.nextToken()) {
-}
-
-SyntaticAnalysis::~SyntaticAnalysis() {
-}
-
-void SyntaticAnalysis::matchToken(enum TokenType type) {
-    // printf("Match token: %d -> %d (\"%s\")\n", m_current.type, type, m_current.token.c_str());
-    if (type == m_current.type) {
-        m_current = m_lex.nextToken();
-    } else {
-        showError();
-    }
 }
 
 void SyntaticAnalysis::advance() {
     m_current = m_lex.nextToken();
 }
 
-void SyntaticAnalysis::eat(enum TokenType type) {
-    // printf("Expected (..., %d), found (\"%s\", %d)\n", type, m_current.token.c_str(), m_current.type);
-    if (type == m_current.type) {
-        advance();
-    } else {
-        showError();
-    }
+void SyntaticAnalysis::eat(TokenType type) {
+    // std::cout << "Expected " << tt2str(type) << ", found " << tt2str(m_current.type) << ": \"" << m_current.token << "\"" << std::endl;
+
+    type == m_current.type ? advance() : showError();
 }
 
 void SyntaticAnalysis::showError() {
-    printf("%02d: ", m_lex.line());
-
-    switch (m_current.type) {
+    std::cout << std::setfill('0') << std::setw(2) << m_lex.line() << ": ";
+    switch(m_current.type) {
         case TKN_INVALID_TOKEN:
-            printf("Lexema inválido [%s]\n", m_current.token.c_str());
+            std::cout << "Lexema inválido [" << m_current.token << "]" << std::endl;
             break;
         case TKN_UNEXPECTED_EOF:
         case TKN_END_OF_FILE:
-            printf("Fim de arquivo inesperado\n");
+            std::cout << "Fim de arquivo inesperado" << std::endl;
             break;
         default:
-            printf("Lexema não esperado [%s]\n", m_current.token.c_str());
+            std::cout << "Lexema não esperado [" << m_current.token << "]" << std::endl;
             break;
     }
 
@@ -189,7 +173,7 @@ EchoCommand* SyntaticAnalysis::procEcho() {
 AssignCommand* SyntaticAnalysis::procAssign() {
     int line = m_lex.line();
     Expr* left = procValue();
-    enum AssignCommand::AssignOp op;
+    AssignCommand::AssignOp op;
     switch(m_current.type) {
         case TKN_ASSIGN:
             op = AssignCommand::StdAssignOp;
