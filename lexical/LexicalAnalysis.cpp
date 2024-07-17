@@ -69,7 +69,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     state = 12;
                 } else if(c == '\"') {
                     state = 13;
-                } else if(c == -1) {
+                } else if(c == EOF) {
                     lex.type = TKN_END_OF_FILE;
                     state = 16;
                 } else {
