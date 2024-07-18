@@ -9,13 +9,12 @@ class Type {
             ArrayType
         };
 
-        Type(Type::ValueType type) : m_type(type) {}
-        virtual ~Type() {}
+        Type(ValueType type) : m_type(type) {}
 
-        Type::ValueType type() const { return m_type; }
+        ValueType type() const { return m_type; }
 
     private:
-        Type::ValueType m_type;
+        ValueType m_type;
 };
 
 #endif

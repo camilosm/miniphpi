@@ -8,7 +8,6 @@
 class StringValue : public Value<std::string> {
     public:
         StringValue(std::string value);
-        virtual ~StringValue();
 
         std::string value() const;
 

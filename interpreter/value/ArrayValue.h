@@ -6,12 +6,9 @@
 
 #include "Value.h"
 
-class Type;
-
 class ArrayValue : public Value<std::map<std::string, Type*>> {
     public:
         ArrayValue(const std::map<std::string, Type*>& value);
-        virtual ~ArrayValue();
 
         std::map<std::string, Type*> value() const;
 

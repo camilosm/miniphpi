@@ -6,7 +6,6 @@
 class IntegerValue : public Value<int> {
     public:
         IntegerValue(int value);
-        virtual ~IntegerValue();
 
         int value() const;
 

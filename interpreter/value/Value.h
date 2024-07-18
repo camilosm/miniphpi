@@ -10,7 +10,6 @@ class Value : public Type {
 
     protected:
         Value(Type::ValueType type) : Type(type) {}
-        virtual ~Value() {}
 };
 
 #endif
