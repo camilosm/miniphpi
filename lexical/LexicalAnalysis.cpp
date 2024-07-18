@@ -20,26 +20,17 @@ int LexicalAnalysis::line() const {
 
 Lexeme LexicalAnalysis::nextToken() {
     Lexeme lex;
-
     int state = 1;
 
-    int lines_token = 0;
-    bool token_built = false;
-
     while(state != 15 && state != 16) {
-
-        if(token_built) {
-            m_line+=lines_token;
-            lines_token=0;
-        }
-
         int c = getc(m_file);
-        if(c == '\n')
-            m_line++;
 
         switch(state) {
             case 1:
-                if(c == ' ' || c == '\t' || c == '\r' || c == '\n') {
+                if(c == '\n') {
+                    m_line++;
+                    state = 1;
+                } else if(c == ' ' || c == '\t' || c == '\r') {
                     state = 1;
                 } else if(c == '/') {
                     state = 2;
@@ -88,8 +79,6 @@ Lexeme LexicalAnalysis::nextToken() {
                 } else {
                     lex.token += '/';
                     ungetc(c, m_file);
-                    if(c == '\n')
-                        m_line--;
                     state = 15;
                 }
                 break;
@@ -97,15 +86,13 @@ Lexeme LexicalAnalysis::nextToken() {
             case 3:
                 if(c == '*') {
                     state = 4;
-                } else if(c == -1) {
+                } else if(c == EOF) {
                     lex.type = TKN_UNEXPECTED_EOF;
                     state = 16;
-                    token_built = true;
+                } else if(c == '\n') {
+                    m_line++;
+                    state = 3;
                 } else {
-                    if(c == '\n') {
-                        lines_token++;
-                        m_line--;
-                    }
                     state = 3;
                 }
                 break;
@@ -115,16 +102,13 @@ Lexeme LexicalAnalysis::nextToken() {
                     state = 4;
                 } else if(c == '/') {
                     state = 1;
-                    token_built = true;
-                } else if(c == -1) {
+                } else if(c == EOF) {
                     lex.type = TKN_UNEXPECTED_EOF;
                     state = 16;
-                    token_built = true;
+                } else if(c == '\n') {
+                    m_line++;
+                    state = 3;
                 } else {
-                    if(c == '\n') {
-                        lines_token++;
-                        m_line--;
-                    }
                     state = 3;
                 }
                 break;
@@ -134,11 +118,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 15;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     state = 15;
                 }
                 break;
@@ -148,11 +128,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 15;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     state = 15;
                 }
                 break;
@@ -162,11 +138,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 15;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     state = 15;
                 }
                 break;
@@ -176,11 +148,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 15;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     state = 15;
                 }
                 break;
@@ -190,11 +158,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 9;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     state = 15;
                 }
                 break;
@@ -204,11 +168,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 11;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     state = 15;
                 }
                 break;
@@ -218,11 +178,7 @@ Lexeme LexicalAnalysis::nextToken() {
                     lex.token += (char)c;
                     state = 11;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     lex.type = TKN_VAR;
                     state = 16;
                 }
@@ -230,14 +186,10 @@ Lexeme LexicalAnalysis::nextToken() {
 
             case 12:
                 if(isdigit(c)) {
-                    lex.token+= (char)c;
+                    lex.token += (char)c;
                     state = 12;
                 } else {
-                    if(c != -1) {
-                        ungetc(c, m_file);
-                        if(c == '\n')
-                            m_line--;
-                    }
+                    ungetc(c, m_file);
                     lex.type = TKN_NUMBER;
                     state = 16;
                 }
@@ -249,20 +201,16 @@ Lexeme LexicalAnalysis::nextToken() {
                 } else if(c == '\"') {
                     lex.type = TKN_STRING;
                     state = 16;
-                    token_built = true;
+                } else if(c == EOF) {
+                    lex.type = TKN_UNEXPECTED_EOF;
+                    state = 16;
+                } else if(c == '\n') {
+                    m_line++;
+                    lex.token += (char)c;
+                    state = 13;
                 } else {
-                    if(c == -1) {
-                        lex.type = TKN_UNEXPECTED_EOF;
-                        state = 16;
-                        token_built = true;
-                    } else {
-                        lex.token += (char)c;
-                        if(c == '\n') {
-                            lines_token++;
-                            m_line--;
-                        }
-                        state = 13;
-                    }
+                    lex.token += (char)c;
+                    state = 13;
                 }
                 break;
 
@@ -288,15 +236,14 @@ Lexeme LexicalAnalysis::nextToken() {
                 } else if(c == '\"') {
                     lex.token += '\"';
                     state = 13;
+                } else if (c == EOF) {
+                    lex.token += '\\';
+                    lex.type = TKN_UNEXPECTED_EOF;
+                    state = 16;
                 } else {
-                    if(c == -1) {
-                        lex.token += '\\';
-                        lex.type = TKN_UNEXPECTED_EOF;
-                    } else {
-                        lex.token += '\\' + c;
-                        lex.type = TKN_INVALID_TOKEN;
-                    }
-
+                    lex.token += '\\';
+                    lex.token += (char)c;
+                    lex.type = TKN_INVALID_TOKEN;
                     state = 16;
                 }
                 break;
