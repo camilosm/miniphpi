@@ -1,9 +1,9 @@
 #ifndef STRING_VALUE_H
 #define STRING_VALUE_H
 
-#include "Value.h"
-
 #include <string>
+
+#include "Value.h"
 
 class StringValue : public Value<std::string> {
     public:
