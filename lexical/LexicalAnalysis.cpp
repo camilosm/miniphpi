@@ -1,7 +1,7 @@
 #include "LexicalAnalysis.h"
 
-#include <cstdio>
 #include <cctype>
+#include <cstdio>
 
 LexicalAnalysis::LexicalAnalysis(const char* filename) : m_line(1) {
     m_file = fopen(filename, "r");
