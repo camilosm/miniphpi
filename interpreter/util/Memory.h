@@ -4,8 +4,8 @@
 #include <map>
 #include <string>
 
-#include "../value/Type.h"
 #include "../value/StringValue.h"
+#include "../value/Type.h"
 
 class Memory {
     public:

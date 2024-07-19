@@ -1,5 +1,11 @@
 #include "Memory.h"
 
+#include <map>
+#include <string>
+
+#include "../value/StringValue.h"
+#include "../value/Type.h"
+
 std::map<std::string, Type*> Memory::m_memory;
 
 Type* Memory::read(const std::string& name) {
