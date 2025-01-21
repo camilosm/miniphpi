@@ -13,15 +13,15 @@ int main(int argc, char* argv[]) {
     try {
         LexicalAnalysis l(argv[1]);
 
-        // O código a seguir é dado para testar o interpretador.
-        // TODO: descomentar depois que o analisador léxico estiver OK.
+        // This section runs the interpreter.
+        // TODO: uncomment after lexical analysis is ok.
         SyntaticAnalysis s(l);
         Command* c = s.start();
         c->execute();
         delete c;
 
-        // O código a seguir é usado apenas para testar o analisador léxico.
-        // TODO: depois de pronto, comentar o código abaixo.
+        // This section is meant to test the lexical analiser.
+        // TODO: comment after lexical analysis is ok.
         // Lexeme lex;
         // while ((lex = l.nextToken()).type > 0) {
         //     printf("(\"%s\", %s)\n", lex.token.c_str(), tt2str(lex.type).c_str());
